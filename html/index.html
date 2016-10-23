@@ -1,0 +1,112 @@
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="shortcut icon" href="/PiRadio16.gif" />
+	<link rel="stylesheet" href="styles.css">
+	<title>PiRadio mini web interface</title>
+	<script src="jquery-1.12.4.min.js"></script>
+	<script>
+	$(document).ready(function() {
+		$("#wyswietlacz").load("lcd.php");
+		var refreshId = setInterval(function() {
+			$("#wyswietlacz").load("lcd.php");
+		}, 1000);
+		$.ajaxSetup({ cache: false });
+		$("#player").load("player.php");
+	});
+	</script>
+</head>
+<body>
+<b>PiRadio</b><div id="config"><a href="config.php">config</a></div><hr>
+<div id="wyswietlacz">
+<br><br><br><br>
+</div>
+<div id="kursory">
+<button id="UPbutton">^</button><br>
+<button id="LEFTbutton">&lt;</button>
+<button id="OKbutton">OK</button>
+<button id="RIGHTbutton">&gt;</button><br>
+<button id="DOWNbutton">v</button>
+</div>
+<div id="lewebuttony">
+<button id="SLEEPbutton">&nbsp;&nbsp;SLEEP&nbsp;&nbsp;</button>
+<button id="WAKEUPbutton">WAKEUP</button>
+<br>
+<button id="CHDOWNbutton">|&lt;&lt; PREV</button>
+<button id="CHUPbutton">NEXT &gt;&gt;|</button>
+<br>
+<button id="RADIObutton">&nbsp;RADIO&nbsp;</button>
+<button id="MEDIAbutton">PLAYER</button>
+<button id="PANDORAbutton">PANDORA</button>
+</div>
+<div id="nadole">
+<div id="player">
+</div>
+<button id="VDOWNbutton">VOL-</button>
+<button id="VUPbutton">VOL+</button>
+<button id="MUTEbutton">MUTE</button>
+</div>
+<script>
+ $("#OKbutton").click(function() {
+   $.post("button.php?key=KEY_OK");
+ });
+ $("#UPbutton").click(function() {
+   $.post("button.php?key=KEY_UP");
+ });
+ $("#DOWNbutton").click(function() {
+   $.post("button.php?key=KEY_DOWN");
+ });
+ $("#LEFTbutton").click(function() {
+   $.post("button.php?key=KEY_LEFT");
+ });
+ $("#RIGHTbutton").click(function() {
+   $.post("button.php?key=KEY_RIGHT");
+ });
+ $("#SLEEPbutton").click(function() {
+   $.post("button.php?key=KEY_SLEEP");
+   setTimeout(function(){
+     $("#player").load("player.php");
+   }, 1500);
+ });
+ $("#WAKEUPbutton").click(function() {
+   $.post("button.php?key=KEY_WAKEUP");
+   setTimeout(function(){
+     $("#player").load("player.php");
+   }, 1500);
+ });
+ $("#CHUPbutton").click(function() {
+   $.post("button.php?key=KEY_CHANNELUP");
+ });
+ $("#CHDOWNbutton").click(function() {
+   $.post("button.php?key=KEY_CHANNELDOWN");
+ });
+ $("#VUPbutton").click(function() {
+   $.post("button.php?key=KEY_VOLUMEUP");
+ });
+ $("#VDOWNbutton").click(function() {
+   $.post("button.php?key=KEY_VOLUMEDOWN");
+ });
+ $("#MUTEbutton").click(function() {
+   $.post("button.php?key=KEY_MUTE");
+ });
+ $("#RADIObutton").click(function() {
+   $.post("button.php?key=KEY_RADIO");
+   setTimeout(function(){
+     $("#player").load("player.php");
+   }, 4000);
+ });
+ $("#MEDIAbutton").click(function() {
+   $.post("button.php?key=KEY_MEDIA");
+   setTimeout(function(){
+     $("#player").load("player.php");
+   }, 5500);
+ });
+ $("#PANDORAbutton").click(function() {
+   $.post("button.php?key=KEY_PANDORA");
+   setTimeout(function(){
+     $("#player").load("player.php");
+   }, 5500);
+ });
+</script>
+</body>

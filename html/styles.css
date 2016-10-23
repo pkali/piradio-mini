@@ -1,0 +1,66 @@
+body {
+	background-color: lightgrey;
+	max-width: 800px;
+	align: center;
+}
+/*
+#nadole {
+    position:fixed;
+    bottom:100px;
+}
+*/
+#nadole {
+    text-align: center;
+    width: 200px;
+}
+#wyswietlacz {
+	border: 1px solid white;
+	background-color: black;
+	color: yellow;
+	font-family: "Lucida Console", Monaco, monospace;
+	padding: 5px;
+}
+#lewebuttony {
+	/* float: left; */
+	text-align: center;
+	width: 200; 
+	height: 150; 
+}
+#kursory {
+	float: right;
+	text-align: center;
+	width: 150; 
+	height: 125; 
+}
+#config {
+	float: right;
+	text-align: center;
+	width: 60; 
+	height: 20;
+	background-color: black;
+	color: white;
+	text-decoration: bold; 
+}
+#config a {
+	text-decoration: none;
+	color: white;
+}
+button {
+	background-color: lightgrey;
+	color: black;
+	padding: 7px 12px;
+	text-align: center;
+	text-decoration: none;
+	font-weight: bold;
+	display: inline-block;
+	border: 2px solid #555555;
+	border-radius: 8px;
+	margin: 2px;
+	-webkit-transition-duration: 0.4s; /* Safari */
+	transition-duration: 0.4s;
+}
+button:hover {
+	background-color: #555555; /* Dark Grey */
+	color: white;
+}
+
