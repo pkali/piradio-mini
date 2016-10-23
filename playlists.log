@@ -1,6 +1,0 @@
-Creating /var/lib/radiod/stationlist
-
-cp /var/lib/radiod/station.urls /var/lib/radiod/stationlist
-
-Creating M3U files from /var/lib/radiod/stationlist
-
