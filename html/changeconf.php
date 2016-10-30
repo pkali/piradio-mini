@@ -13,11 +13,54 @@
 $msg = $_GET['file'];
 if (isset($msg)) {
 	if ($msg == "restart") {
-		$end = "xxx";
+		$end = shell_exec('sudo ./scripts/restart.sh');
+		echo "PiRadio restart in progress.<br>\r\n";
+		echo "<script>\r\n";
+		echo "// redirect to main after 1 second\r\n";
+		echo "window.setTimeout(function() {\r\n";
+		echo "  window.location.href = 'index.html';\r\n";
+		echo "}, 1000);\r\n";
+		echo "</script>\r\n";
+	} elseif ($msg == "reboot") {
+		$end = shell_exec('sudo ./scripts/reboot.sh');
+		/* UWAGA! Folder z plikami uruchamianymi przez sudo
+		musi byc dopisany w pliku /etc/sudoers     */
+		echo "Reboot in progress.<br>\r\n";
+		echo "Wait!<br>\r\n";
+		echo "<script>\r\n";
+		echo "// redirect to main after 30 seconds\r\n";
+		echo "window.setTimeout(function() {\r\n";
+		echo "  window.location.href = 'index.html';\r\n";
+		echo "}, 30000);\r\n";
+		echo "</script>\r\n";
+	} elseif ($msg == "audio") {
+		echo "Not implemented...";
 	} elseif ($msg == "stations") {
 		echo "Not implemented...";
 	} elseif ($msg == "network") {
 		echo "Not implemented...";
+	} elseif ($msg == "update") {
+		$confirmation = $_POST["submit"];
+		if ($confirmation == "yes") {
+			echo "Update from github in progress.<br>";
+			$end = shell_exec('sudo ./scripts/make_tmp.sh');
+			$end = shell_exec('sudo ./scripts/tmp_upd.sh');
+			echo "Wait!<br>\r\n";
+			echo "<script>\r\n";
+			echo "// redirect to main after 30 seconds\r\n";
+			echo "window.setTimeout(function() {\r\n";
+			echo "  window.location.href = 'index.html';\r\n";
+			echo "}, 30000);\r\n";
+			echo "</script>\r\n";
+		} else {
+			echo "Update from github canceled.<br>\r\n";
+			echo "<script>\r\n";
+			echo "// redirect to main after 2 seconds\r\n";
+			echo "window.setTimeout(function() {\r\n";
+			echo "  window.location.href = 'index.html';\r\n";
+			echo "}, 2000);\r\n";
+			echo "</script>\r\n";
+		}
 	} elseif ($msg == "rss") {
 		$rss_link = $_POST["rss_link"];
 		file_put_contents('/var/lib/radiod/rss', $rss_link);
@@ -70,6 +113,6 @@ if (isset($msg)) {
 }
 ?>
 <hr>
-<a href="config.php?command=restart"><button>PiRadio restart</button></a>
-<a href="config.php?command=reboot"><button>System reboot</button></a>
+<a href="changeconf.php?file=restart"><button>PiRadio restart</button></a>
+<a href="changeconf.php?file=reboot"><button>System reboot</button></a>
 </body>
