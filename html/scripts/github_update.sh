@@ -9,7 +9,7 @@ unzip /home/pi/piradionew.zip -d /usr/share/
 tar -cvzf /home/pi/backup.tar /usr/share/radio/
 
 # Copy new version of files (overwrite old)
-cp -R /usr/share/piradio-mini-master/* /usr/share/radio/
+cp --preserve=timestamp -R /usr/share/piradio-mini-master/* /usr/share/radio/
 chmod -R 0777 /usr/share/radio/*
 
 # Remove temp dir: /usr/share/piradio-mini-master
