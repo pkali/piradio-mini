@@ -187,7 +187,7 @@ class Radio:
 	pandora_search_index = 0
 	loadnew = False	  # Load new track from search
 	streaming = False	# Streaming (Icecast) disabled
-	VERSION	= "5.4b"		# Version number
+	VERSION	= "5.4c"		# Version number
 
 	ADAFRUIT = 1		# I2C backpack type AdaFruit
 	PCF8574  = 2 		# I2C backpack type PCF8574
