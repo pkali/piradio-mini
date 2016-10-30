@@ -134,6 +134,7 @@ class Translate:
 		'\\xc5\\x82' : 'l',        # l/
 		'\\xc5\\x83' : 'N',        # N'
 		'\\xc5\\x84' : 'n',        # n'
+		'\\xc3\\xb1' : 'n',        # n'
 		'\\xc5\\x9a' : 'S',        # S'
 		'\\xc5\\x9b' : 's',        # s'
 		'\\xc5\\xb9' : 'Z',        # Z'
