@@ -9,11 +9,15 @@
 <body>
 <b>PiRadio</b><div id="config"><a href="config.php">config</a></div></br>
 <hr>
-Update to last build from github<br><br>
-Do you really want to update your PiRadio from github repository.<br>
-After update your PiRadio will be rebooted!
+Update to last build from github<br><pre>
+<?php
+echo "Your PiRadio version: <b>5.4c</b>. Last commit: <b>".date("F d Y H:i:s",filemtime("/usr/share/radio/README.md"))."</b>.";
+?>
+<br>Do you really want to update your PiRadio from github repository.<br>
+After update your PiRadio will be rebooted!</pre>
 <form action="changeconf.php?file=update" method="post">
 <button type="submit" name="submit" value="yes">Yes - update and reboot</button>
 <button type="submit" name="submit" value="no">No - no update</button>
 <hr>
 </body>
+	
