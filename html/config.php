@@ -1,15 +1,3 @@
-<?php
-$msg = $_GET['command'];
-if (isset($msg)) {
-  if ($msg == "restart") {
-    $end = shell_exec('sudo ./scripts/restart.sh');
-  } elseif ($msg == "reboot") {
-    $end = shell_exec('sudo ./scripts/reboot.sh');
-    /* UWAGA! Kazdy skrypt uruchamiany przez sudo
-       musi byc dopisany w pliku /etc/sudoers     */
-  }
-}
-?>
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -61,6 +49,7 @@ echo '</b><br>';
 <button type="submit" name="submit">Save Global PiRadio config</button>
 </pre>
 </form>
+<a href="hconfig.php"><button>Hardware Configuration & Update</button></a>
 <hr>
 Media network folder config
 <form action="changeconf.php?file=network" method="post">
@@ -117,6 +106,6 @@ echo '</textarea>';
 <br><button type="submit" name="submit">Save radio stations list</button>
 </form>
 <hr>
-<a href="config.php?command=restart"><button>PiRadio restart</button></a>
-<a href="config.php?command=reboot"><button>System reboot</button></a>
+<a href="changeconf.php?file=restart"><button>PiRadio restart</button></a>
+<a href="changeconf.php?file=reboot"><button>System reboot</button></a>
 </body>
