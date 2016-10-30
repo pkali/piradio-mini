@@ -19,7 +19,7 @@ Audio device config<br>
 </form>
 <hr>
 Update to last build from github
-<a href="update.html"><button>PiRadio update</button></a>
+<a href="update.php"><button>PiRadio update</button></a>
 <hr>
 <a href="changeconf.php?file=restart"><button>PiRadio restart</button></a>
 <a href="changeconf.php?file=reboot"><button>System reboot</button></a>
