@@ -54,6 +54,7 @@ if (isset($msg)) {
 			echo "</script>\r\n";
 		} else {
 			echo "Update from github canceled.<br>\r\n";
+			$end = shell_exec('sudo ./scripts/cancel_update.sh');
 			echo "<script>\r\n";
 			echo "// redirect to main after 2 seconds\r\n";
 			echo "window.setTimeout(function() {\r\n";
