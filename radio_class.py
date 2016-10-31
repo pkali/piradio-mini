@@ -51,6 +51,7 @@ TimerFile = RadioLibDir + "/timer"
 AlarmFile = RadioLibDir + "/alarm" 
 StreamFile = RadioLibDir + "/streaming"
 BoardRevisionFile = RadioLibDir + "/boardrevision"
+VersionFile = "/usr/share/radio/version"
 
 log = Log()
 translate = Translate()
@@ -113,6 +114,7 @@ class Radio:
 	ONEDAYSECS = 86400	# Day in seconds
 	ONEDAYMINS = 1440	# Day in minutes
 
+	version = "0.0"
 	boardrevision = 2 # Raspberry board version type
 	udphost = 'localhost'  # Remote IR listener UDP Host
 	udpport = 5100  # Remote IR listener UDP port number
@@ -187,7 +189,6 @@ class Radio:
 	pandora_search_index = 0
 	loadnew = False	  # Load new track from search
 	streaming = False	# Streaming (Icecast) disabled
-	VERSION	= "5.4c"		# Version number
 
 	ADAFRUIT = 1		# I2C backpack type AdaFruit
 	PCF8574  = 2 		# I2C backpack type PCF8574
@@ -219,6 +220,9 @@ class Radio:
 		# Create directory 
 		if not os.path.isfile(CurrentStationFile):
 			self.execCommand ("mkdir -p " + RadioLibDir )
+
+		# Get version from file
+		self.version = self.readFromFile(VersionFile) # (Pecus)
 
 		# Initialise configuration files from ConfigFiles list
 		for file in self.ConfigFiles:
@@ -2506,7 +2510,7 @@ class Radio:
 	
 	# Version number
 	def getVersion(self):
-		return self.VERSION
+		return self.version
 
 	# Get the the backlight color number (option = bg_color etc)
 	def getBackColor(self,option):	
