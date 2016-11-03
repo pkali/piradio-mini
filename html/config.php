@@ -15,6 +15,26 @@ Global PiRadio config<br>
 <?php
 $piradio = file_get_contents( "/etc/radiod.conf" );
 $piradio_array = parse_ini_string($piradio);
+$write_conf = false;
+if (!isset($piradio_array['rss'])) {
+	$piradio = $piradio."\r\n# RSS in standby (Pecus)\r\nrss=no\r\n";
+	$write_conf = true;
+}
+if (!isset($piradio_array['bright'])) {
+	$piradio = $piradio."\r\n# LCD backlight high brightness (Pecus)\r\nbright=no\r\n";
+	$write_conf = true;
+}
+if (!isset($piradio_array['media_update'])) {
+	$piradio = $piradio."\r\n# Always (after switch to media player) update media library (Pecus)\r\nmedia_update=no\r\n";
+	$write_conf = true;
+}
+if (!isset($piradio_array['pandora_available'])) {
+	$piradio = $piradio."\r\n# Is Pandora account available (Pecus)\r\npandora_available=no\r\n";
+	$write_conf = true;
+}
+if ($write_conf) {
+	file_put_contents('/etc/radiod.conf', $piradio);
+}
 echo "<b>";
 echo '<input type="checkbox" name="rss" value="rss" ';
 if ( $piradio_array['rss'] ) {
