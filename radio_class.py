@@ -223,6 +223,7 @@ class Radio:
 
 		# Get version from file
 		self.version = self.readFromFile(VersionFile) # (Pecus)
+		self.version = self.version.rstrip('\r\n')
 
 		# Initialise configuration files from ConfigFiles list
 		for file in self.ConfigFiles:
