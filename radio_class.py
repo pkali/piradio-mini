@@ -156,7 +156,6 @@ class Radio:
 	current_file = ""  		# Currently playing track or station
 	option_changed = False		# Option changed
 	channelChanged = True		# Used to display title
-	tuneChanged = True		# zmienil sie utwor, wymusic aktualizacje wyswietlacza jesli sie uda
 	configOK = False		# Do we have a configuration file
 	display_playlist_number = False # Display playlist number
 	
@@ -1648,8 +1647,7 @@ class Radio:
 						x = self.pianobar.expect(['\r\n', pexpect.TIMEOUT])
 						if x == 0: # Artist - Title - from: "Album"
 							self.pandora_song_name = self.pianobar.before
-							self.tuneChanged = True		# moze to jakos oprogramowac ????
-							self.channelChanged = True		# A moze tak zadziala
+							self.setInterrupt()		# A to dziala !!!
 					elif x == 1:
 						# 'STATION: '
 						x = self.pianobar.expect([' \| ', pexpect.TIMEOUT])
@@ -1659,7 +1657,7 @@ class Radio:
 						# wisi na odpytywaniu o kolejne utwory ???
 						# to sie pianobarowi przytrafia zbyt czesto
 						# jak wisi, to trzeba ponownie odpalic stacje
-						x = self.pianobar.expect(['Ok.', 'Error: ', pexpect.TIMEOUT], timeout=5)  # czekamy 5s. na Ok, moze sie uda zaladowac, a moze komunikat bledu jest
+						x = self.pianobar.expect(['Ok.', 'Error: ', pexpect.TIMEOUT], timeout=4)  # czekamy 4s. na Ok, moze sie uda zaladowac, a moze komunikat bledu jest
 						if x == 2:
 							# nie udalo sie - restart
 							self.pandora_stop()
