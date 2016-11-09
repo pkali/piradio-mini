@@ -35,6 +35,31 @@ if (isset($msg)) {
 		echo "</script>\r\n";
 	} elseif ($msg == "audio") {
 		echo "Not implemented...";
+	} elseif ($msg == "remote") {
+		$selected = $_POST['remote'];
+		if (isset($selected)) {
+			$remote = file_get_contents( "/usr/share/radio/hardware/remotes/".$selected );
+			preg_match('/\n# *brand: *.*/', $remote, $matches);
+			$remotename = preg_replace("/\n# *brand: */", "", $matches[0]);
+			echo "Selected <b>".$remotename."</b> remote controller.<br>\r\n";
+			$end = shell_exec('sudo ./scripts/set_remote.sh '.$selected );
+			echo "Reboot in progress.<br>\r\n";
+			echo "Wait!<br>\r\n";
+			echo "<script>\r\n";
+			echo "// redirect to main after 30 seconds\r\n";
+			echo "window.setTimeout(function() {\r\n";
+			echo "  window.location.href = 'index.html';\r\n";
+			echo "}, 30000);\r\n";
+			echo "</script>\r\n";
+		} else {
+			echo "Remote controller not selected.<br>\r\n";
+			echo "<script>\r\n";
+			echo "// redirect to main after 2 seconds\r\n";
+			echo "window.setTimeout(function() {\r\n";
+			echo "  window.location.href = 'index.html';\r\n";
+			echo "}, 2000);\r\n";
+			echo "</script>\r\n";
+		}
 	} elseif ($msg == "stations") {
 		echo "Not implemented...";
 	} elseif ($msg == "network") {

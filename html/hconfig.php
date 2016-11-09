@@ -18,6 +18,33 @@ Audio device config<br>
 </pre>
 </form>
 <hr>
+Remote config<br>
+<form action="changeconf.php?file=remote" method="post">
+<pre>
+<?php
+$remote = file_get_contents( "/etc/lirc/lircd.conf" );
+preg_match('/\n# *brand: *.*/', $remote, $matches);
+$currentremotename = preg_replace("/\n# *brand: */", "", $matches[0]);
+$dir    = '/usr/share/radio/hardware/remotes/';
+$remoteconfigs = scandir($dir);
+for ($i = 0; $i < count($remoteconfigs); $i++) {
+	if (preg_match('/.conf/',$remoteconfigs[$i])) {
+		$remote = file_get_contents( "/usr/share/radio/hardware/remotes/".$remoteconfigs[$i] );
+		preg_match('/\n# *brand: *.*/', $remote, $matches);
+		$remotename = preg_replace("/\n# *brand: */", "", $matches[0]);
+		echo '  <input type="radio" name="remote" value="';
+		echo $remoteconfigs[$i].'"';
+		if ($remotename==$currentremotename) {
+			echo ' checked';
+		}
+		echo "> ".$remotename."\n";
+	}
+}
+?>
+<br><button type="submit" name="submit">Save remote config and reboot</button>
+</pre>
+</form>
+<hr>
 Update to last build from github
 <a href="update.php"><button>PiRadio update</button></a>
 <hr>
