@@ -52,7 +52,7 @@ if ( $hqa_v == 2 ) {
 }
 echo '">';
 ?>
-  <button type="submit" name="submit">Save audio device config</button>
+  <button type="submit" name="submit">Save audio device config and reboot</button>
 </pre></b>
 </form>
 <hr>

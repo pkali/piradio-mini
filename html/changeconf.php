@@ -34,7 +34,71 @@ if (isset($msg)) {
 		echo "}, 30000);\r\n";
 		echo "</script>\r\n";
 	} elseif ($msg == "audio") {
-		echo "Not implemented...";
+		$selected = $_POST['output'];
+		$hda = $_POST['hda'];
+		$output_old = $_POST['output_old'];
+		$hda_old = $_POST['hda_old'];
+		if (isset($selected)) {
+			if ( ($selected == $output_old) and ($hda == $hda_old) ) {
+				echo "No changes in audio output configuration.<br>\r\n";
+				echo "<script>\r\n";
+				echo "// redirect to main after 2 seconds\r\n";
+				echo "window.setTimeout(function() {\r\n";
+				echo "  window.location.href = 'index.html';\r\n";
+				echo "}, 2000);\r\n";
+				echo "</script>\r\n";
+			} else {
+				$end = shell_exec('sudo ./scripts/get_audio_info.sh');
+				$lines = explode(PHP_EOL, $end);
+				if (count($lines) < 4 ) {
+					echo "There is only ONE audio output in Your PiRadio!<br><br>";
+					$selected = 'internal';
+				}
+				// Set default mixer and device names for internal audio
+				$mixer = "PCM";
+				$device = "Internal audio device";
+				// Prepare pwm parameter
+				$pwm = ( $hda == 'hdaudio') ? "2" : "1";
+				// If external USB audio selected
+				if ( $selected == 'usb' ) {
+					// Check number of USB card
+					preg_match('/bcm2835/', $lines[0], $matches);
+					$usbline = (isset($matches[0])) ? 2 : 0;
+					// strange !!!
+					preg_match("/\[(.*?)\]/", $lines[$usbline], $matches);
+					$device = $matches[1];
+					preg_match("/\'(.*?)\'/", $lines[$usbline + 1], $matches);
+					$mixer = $matches[1];
+				}
+				echo "New audio device settings.<br>";
+				echo "<br>Device: <b>".$device."</b><br>";
+				echo "Mixer: <b>".$mixer."</b><br>";
+				echo "Internal audio high quality mode: <b>";
+				if ( $pwm == 2 ) {
+					echo "Yes";
+				} else {
+					echo "No";
+				}
+				echo "</b><br><br>";
+				$end = shell_exec('sudo ./scripts/set_audio.sh '.$selected.' '.$mixer.' '.$pwm );
+				echo "Reboot in progress.<br>\r\n";
+				echo "Wait!<br>\r\n";
+				echo "<script>\r\n";
+				echo "// redirect to main after 30 seconds\r\n";
+				echo "window.setTimeout(function() {\r\n";
+				echo "  window.location.href = 'index.html';\r\n";
+				echo "}, 30000);\r\n";
+				echo "</script>\r\n";
+			}
+		} else {
+			echo "Audio output device not selected.<br>\r\n";
+			echo "<script>\r\n";
+			echo "// redirect to main after 2 seconds\r\n";
+			echo "window.setTimeout(function() {\r\n";
+			echo "  window.location.href = 'index.html';\r\n";
+			echo "}, 2000);\r\n";
+			echo "</script>\r\n";
+		}
 	} elseif ($msg == "remote") {
 		$selected = $_POST['remote'];
 		if (isset($selected)) {
