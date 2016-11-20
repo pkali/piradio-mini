@@ -148,10 +148,10 @@ class Lcd:
 
 	# Initialise the display
 	def lcd_init(self):
-		#self._byte_out(0x33,LCD_CMD) # 110011 Initialise LCD?
-		#self._byte_out(0x32,LCD_CMD) # 110010 Initialise LCD?
 		self._byte_out(0x00,LCD_CMD) # 000000 Initialise OLED?
 		self._byte_out(0x02,LCD_CMD) # 000010 Initialise OLED?
+		self._byte_out(0x33,LCD_CMD) # 110011 Initialise LCD?
+		self._byte_out(0x32,LCD_CMD) # 110010 Initialise LCD?
 		# Problem with OLED display after reboot ?? (Pecus)
 		self._byte_out(0x28,LCD_CMD) # 101000 Data length, number of lines, font size (Pecus)
 		time.sleep(E_POSTCLEAR)      # waiting for longer delay (Pecus)
