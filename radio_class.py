@@ -347,13 +347,14 @@ class Radio:
 
 		# Sleep mode - forcing timer (Pecus)
 		elif key == 'KEY_SLEEP':                             # (Pecus)
-			self.timerValue = 1                          # (Pecus)
-			self.timerOn()                               # (Pecus)
-			now = int(time.time())                       # (Pecus)
-			self.timeTimer = now - self.timerValue * 60  # (Pecus)
-			self.fireTimer()                             # (Pecus)
-			time.sleep(0.5)	# Zapobiega przewinieciu sie calego tytulu pandory na LCD przed wylaczeniem... dlaczego???
-			self.setInterrupt()                          # (Pecus)
+			if self.display_mode != self.MODE_SLEEP:  # no in sleep mode! (Pecus)
+				self.timerValue = 1                          # (Pecus)
+				self.timerOn()                               # (Pecus)
+				now = int(time.time())                       # (Pecus)
+				self.timeTimer = now - self.timerValue * 60  # (Pecus)
+				self.fireTimer()                             # (Pecus)
+				time.sleep(0.5)	# Zapobiega przewinieciu sie calego tytulu pandory na LCD przed wylaczeniem... dlaczego???
+				self.setInterrupt()                          # (Pecus)
 
 		# Wakeup from sleep - forcing menu and unmute (Pecus)
 		elif key == 'KEY_WAKEUP':                            # (Pecus)

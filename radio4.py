@@ -415,7 +415,7 @@ def get_switch_states(lcd,radio,rss):
 
 			if display_mode == radio.MODE_SOURCE:
 				radio.toggleSource(UP)
-				radio.setReload(True)
+				#radio.setReload(True)
 
 			elif display_mode == radio.MODE_SEARCH:
 				wait = 0.5
@@ -444,7 +444,7 @@ def get_switch_states(lcd,radio,rss):
 
 			if display_mode == radio.MODE_SOURCE:
 				radio.toggleSource(DOWN)
-				radio.setReload(True)
+				#radio.setReload(True)
 
 			elif display_mode == radio.MODE_SEARCH:
 				wait = 0.5
