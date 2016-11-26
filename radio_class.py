@@ -408,7 +408,7 @@ class Radio:
 		self.current_id = self.getStoredID(self.current_file)
 		log.message("radio.start current ID " + str(self.current_id), log.DEBUG)
 		self.volume = self.getStoredVolume()
-		self._setVolume(self.volume)
+		self.setVolume(self.volume)
 
 		# Alarm and timer settings
 		self.timeTimer = int(time.time())
@@ -854,7 +854,7 @@ class Radio:
 
 	# Get volume and check if it has been changed by any MPD external client
 	# Slug MPD calls to no more than  per 0.5 second
-	def _getVolume(self):
+	def getVolume(self):
 		volume = 0
 		error = False
 		try:
@@ -866,7 +866,7 @@ class Radio:
 			else:
 				volume = self.volume
 		except:
-			log.message("radio._getVolume failed", log.ERROR)
+			log.message("radio.getVolume failed", log.ERROR)
 			volume = 1
 			error = True
 
@@ -875,17 +875,21 @@ class Radio:
 			error = True
 		if volume < 0:
 			error = True
-
+		if not error:
+			if volume < config.getVolumeMin():
+				volume = config.getVolumeMin()
+			if volume > config.getVolumeMax():
+				wolume = config.getVolumeMax()
 		if volume != self.volume:
 			if not error:
 				self.device_error_cnt = 0
-				log.message("radio._getVolume external client changed volume " 
+				log.message("radio.getVolume external client changed volume " 
 								+ str(volume),log.DEBUG)
-				self._setVolume(volume)
+				self.setVolume(volume)
 				self.volumeChange = True
 			else:
 				self.device_error_cnt += 1
-				log.message("radio._getVolume audio device error " + str(volume), log.ERROR)
+				log.message("radio.getVolume audio device error " + str(volume), log.ERROR)
 
 				if self.device_error_cnt > 10:	
 					msg =  "Sound device error - exiting"
@@ -895,49 +899,32 @@ class Radio:
 
 		return self.volume
 
-	def getVolume(self):
-		increment = config.getVolumeIncrement()
-		return self._getVolume()/increment
-
 	# Check for volume change
 	def volumeChanged(self):
 		volumeChange = self.volumeChange
 		self.volumeChange = False
 		return volumeChange
 
-	# Return the volume range
-	def getVolumeRange(self):
-		return config.getVolumeRange()
-
-	# Set volume (Called from the radio client or external mpd client via getVolume())
+	# Set volume 0-100 
 	def setVolume(self,volume):
-		range = config.getVolumeRange()
-		log.message("radio.setVolume vol=" + str(volume)
-				+ " (range 0-" + str(range) + ")",log.DEBUG)
-		increment = config.getVolumeIncrement()
-		volume = self._setVolume(volume * increment)
-		return volume/increment
-
-	# Set volume 0-100 (only called from in this class)
-	def _setVolume(self,volume):
 		if self.muted(): 
 			self.unmute()
 		else:
-			if volume > 100:
-				 volume = 100
-			elif volume < 0:
-				 volume = 0
+			if volume > config.getVolumeMax():
+				 volume = config.getVolumeMax()
+			elif volume < config.getVolumeMin():
+				 volume = config.getVolumeMin()
 
 			try:
 				if volume != self.volume:
-					log.message("radio._setVolume vol=" + str(volume),log.DEBUG)
+					log.message("radio.setVolume vol=" + str(volume),log.DEBUG)
 					client.setvol(volume)
 					self.volume = volume
 					# Don't change stored volume (Needed for unmute function)
 					if not self.muted():
 						self.storeVolume(self.volume)
 			except:
-				log.message("radio._setVolume error vol=" + str(self.volume),log.ERROR)
+				log.message("radio.setVolume error vol=" + str(self.volume),log.ERROR)
 
 		return self.volume
 
@@ -947,16 +934,16 @@ class Radio:
 		increment = config.getVolumeIncrement()
 		volume = self.volume + increment
 		log.message("radio.increaseVolume vol=" + str(volume),log.DEBUG)
-		volume = self._setVolume(volume)
-		return volume/increment
+		volume = self.setVolume(volume)
+		return volume
 
 	# Decrease volume 
 	def decreaseVolume(self):
 		increment = config.getVolumeIncrement()
 		volume = self.volume - increment
 		log.message("radio.decreaseVolume vol=" + str(volume),log.DEBUG)
-		volume = self._setVolume(volume)
-		return volume/increment
+		volume = self.setVolume(volume)
+		return volume
 
 	# Mute sound functions (Also stops MPD if not streaming)
 	def mute(self):

@@ -40,8 +40,10 @@ class Configuration:
 	# Configuration parameters
 	mpdport = 6600  # MPD port number
 	dateFormat = "%H:%M %d/%m/%Y"   # Date format
-	volume_range = 100 		# Volume range 10 to 100
-	volume_increment = 1 		# Volume increment 1 to 10
+	#volume_range = 100 		# Volume range 10 to 100
+	volume_min = 0
+	volume_max = 100
+	volume_increment = 4
 	display_playlist_number = False # Two line displays only, display station(n)
 	source = RADIO  # Source RADIO or Player
 	stationNamesSource = LIST # Station names from playlist names or STREAM
@@ -138,14 +140,26 @@ class Configuration:
 				if option == 'loglevel':
 					next
 
-				elif option == 'volume_range':
-					range = int(parameter)
-					if range < 10:
-						range = 10
-					if range > 100:
-						range = 100
-					self.volume_range = range
-					self.volume_increment = int(100/range)
+				#elif option == 'volume_range':
+				#	range = int(parameter)
+				#	if range < 10:
+				#		range = 10
+				#	if range > 100:
+				#		range = 100
+				#	self.volume_range = range
+				#	self.volume_increment = int(range/21)
+
+				elif option == 'volume_min':
+					if int(parameter) < 0:
+						self.volume_min = 0
+					else:
+						self.volume_min = int(parameter)
+
+				elif option == 'volume_max':
+					if int(parameter) > 100:
+						self.volume_max = 100
+					else:
+						self.volume_max = int(parameter)
 
 				elif option == 'remote_led':
 					self.remote_led = int(parameter)
@@ -269,6 +283,12 @@ class Configuration:
 						+ section + ' in ' + ConfigFile
 					log.message(msg,log.ERROR)
 
+			range = self.volume_max - self.volume_min
+			if range < 22:
+				self.volume_min = 0
+				sel.volume_max = 100
+				range = 100
+			self.volume_increment = int(range/21)
 		except ConfigParser.NoSectionError:
 			msg = ConfigParser.NoSectionError(section),'in',ConfigFile
 			log.message(msg,log.ERROR)
@@ -289,8 +309,14 @@ class Configuration:
 		return self.backpack_names[self.i2c_backpack]
 
 	# Get the volume range
-	def getVolumeRange(self):
-		return self.volume_range
+	#def getVolumeRange(self):
+	#	return self.volume_range
+
+	def getVolumeMax(self):
+		return self.volume_max
+
+	def getVolumeMin(self):
+		return self.volume_min
 
 	# Get the volume increment
 	def getVolumeIncrement(self):
@@ -477,7 +503,9 @@ if __name__ == '__main__':
 
 	config = Configuration()
 	print "Configuration file", ConfigFile
-	print "Volume range:", config.getVolumeRange()
+	#print "Volume range:", config.getVolumeRange()
+	print "Volume min.:", config.getVolumeMin()
+	print "Volume max.:", config.getVolumeMax()
 	print "Volume increment:", config.getVolumeIncrement()
 	print "Mpd port:", config.getMpdPort()
 	print "Remote LED:", config.getRemoteLed()

@@ -906,7 +906,7 @@ def display_search(lcd,radio):
 def unmuteRadio(lcd,radio):
 	radio.unmute()
 	volume = radio.getVolume()
-	lcd.line4("Volume " + str(volume))
+	lcd.line4("Volume " + str(VolumeToDisplay(volume)))
 	radio.setDisplayMode(radio.MODE_TIME)
 	return
 
@@ -987,7 +987,7 @@ def displayVolume(lcd,radio):
 	if radio.muted():
 		msg = "Sound muted"
 	else:
-		msg = "Volume " + str(radio.getVolume())
+		msg = "Volume " + str(VolumeToDisplay(radio.getVolume()))
 	if radio.getTimer():
 		msg = msg + " " + radio.getTimerString()
 	if radio.alarmActive():
@@ -1053,6 +1053,12 @@ def displayInfo(lcd,ipaddr,mpd_version):
 	else:
 		lcd.scroll1("IP "+ ipaddr,interrupt)
 	return
+
+def VolumeToDisplay(volume):
+	volume = (volume - config.getVolumeMin()) * 100
+	tym = (config.getVolumeMax() - config.getVolumeMin())
+	volume = volume / tym
+	return volume
 
 # Check Timer fired
 def checkTimer(radio):
