@@ -32,6 +32,14 @@ if (!isset($piradio_array['pandora_available'])) {
 	$piradio = $piradio."\r\n# Is Pandora account available (Pecus)\r\npandora_available=no\r\n";
 	$write_conf = true;
 }
+if (!isset($piradio_array['volume_min'])) {
+	$piradio = $piradio."\r\nvolume_min=0\r\n";
+	$write_conf = true;
+}
+if (!isset($piradio_array['volume_max'])) {
+	$piradio = $piradio."\r\nvolume_max=100\r\n";
+	$write_conf = true;
+}
 if ($write_conf) {
 	file_put_contents('/etc/radiod.conf', $piradio);
 }

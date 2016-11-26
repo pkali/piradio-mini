@@ -57,10 +57,21 @@ if (isset($msg)) {
 				// Set default mixer and device names for internal audio
 				$mixer = "PCM";
 				$device = "Internal audio device";
+				// Set default volume limits for internal audio (HQ)
+				$volume_min = 35;
+				$volume_max = 95;
 				// Prepare pwm parameter
 				$pwm = ( $hda == 'hdaudio') ? "2" : "1";
+				if ( $pwm == '1') {
+					// Default volume limits for internal audio (SQ)
+					$volume_min = 40;
+					$volume_max = 100;
+				}
 				// If external USB audio selected
 				if ( $selected == 'usb' ) {
+					// Default volume limit for USB device
+					$volume_min = 0;
+					$volume_max = 100;
 					// Check number of USB card
 					preg_match('/bcm2835/', $lines[0], $matches);
 					$usbline = (isset($matches[0])) ? 2 : 0;
@@ -79,7 +90,20 @@ if (isset($msg)) {
 				} else {
 					echo "No";
 				}
-				echo "</b><br><br>";
+				echo "</b><br>";
+				$piradio = file_get_contents( "/etc/radiod.conf" );
+				$piradio_new = preg_replace("/\nvolume_min *= *.*/", "\nvolume_min=".$volume_min, $piradio);
+				$piradio_new = preg_replace("/\nvolume_max *= *.*/", "\nvolume_max=".$volume_max, $piradio_new);
+				$piradio_array = parse_ini_string($piradio_new);
+				$volume_min = ($piradio_array['volume_min']);
+				$volume_max = ($piradio_array['volume_max']);
+				echo "Volume limits:<br>";
+				echo "<b>";
+				echo "min: ".$volume_min."<br>";
+				echo "max: ".$volume_max."</b><br>";
+				file_put_contents('/etc/radiod.conf', $piradio_new);
+				chmod("/etc/radiod.conf", 0755);
+				echo "<br>";
 				$end = shell_exec('sudo ./scripts/set_audio.sh '.$selected.' '.$mixer.' '.$pwm );
 				echo "Reboot in progress.<br>\r\n";
 				echo "Wait!<br>\r\n";
