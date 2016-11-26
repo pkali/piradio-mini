@@ -762,8 +762,10 @@ class Radio:
 
 	# Handle toggling of source
 	def handle_source(self,key):
-		if key == 'KEY_UP' or key == 'KEY_DOWN':
-			self.toggleSource()
+		if key == 'KEY_UP':
+			self.toggleSource(self.UP)
+		if key == 'KEY_DOWN':
+			self.toggleSource(self.DOWN)
 		return
 
 	# Input Source RADIO, NETWORK or PLAYER
@@ -2089,21 +2091,23 @@ class Radio:
 		return new_id
 
 	# Toggle the input source (Reload is done when Reload requested)
-	def toggleSource(self):
-		if self.source == self.RADIO:
-			self.source = self.PLAYER
-			sSource = language.getText('source_media')
-		elif self.source == self.PLAYER:
+	def toggleSource(self,direction):
+		# Remember! RADIO=0, PLAYER=1, PANDORA=2 always!
+		if direction == self.UP:
+			self.source +=1
+			if self.source == self.PANDORA and (not config.getPandoraAvailable()):
+				self.source +=1
+		elif direction == self.DOWN:
+			self.source -=1
+		if self.source < self.RADIO:
 			if config.getPandoraAvailable():
 				self.source = self.PANDORA
-				sSource = language.getText('source_pandora')
 			else:
-				self.source = self.RADIO
-				sSource = language.getText('source_radio')
-		else:
+				self.source = self.PANDORA - 1 # PLAYER
+		if self.source > self.PANDORA:
 			self.source = self.RADIO
-			sSource = language.getText('source_radio')
-		self.setReload(True)	
+
+		self.setReload(True)
 
 		if self.speech: 
 			self.speak(sSource)

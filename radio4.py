@@ -414,7 +414,7 @@ def get_switch_states(lcd,radio,rss):
 				unmuteRadio(lcd,radio)
 
 			if display_mode == radio.MODE_SOURCE:
-				radio.toggleSource()
+				radio.toggleSource(UP)
 				radio.setReload(True)
 
 			elif display_mode == radio.MODE_SEARCH:
@@ -443,7 +443,7 @@ def get_switch_states(lcd,radio,rss):
 				unmuteRadio(lcd,radio)
 
 			if display_mode == radio.MODE_SOURCE:
-				radio.toggleSource()
+				radio.toggleSource(DOWN)
 				radio.setReload(True)
 
 			elif display_mode == radio.MODE_SEARCH:
