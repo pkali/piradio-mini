@@ -260,7 +260,7 @@ class MyDaemon(Daemon):
 				time.sleep(1)
 			else:
 				time.sleep(0.1)
-			
+
 			# End of main processing loop
 
 	def status(self):
@@ -356,7 +356,7 @@ def get_switch_states(lcd,radio,rss):
 
 		if display_mode > radio.mode_last:
                         boardrevision = radio.getBoardRevision()
-                        lcd.init(boardrevision) # Recover corrupted dosplay
+                        lcd.init(boardrevision) # Recover corrupted display
 			display_mode = radio.MODE_TIME
 
 		radio.setDisplayMode(display_mode)
@@ -872,7 +872,7 @@ def display_source_select(lcd,radio):
 #		else:
 #			lcd.line4(radio.getProgress()) 
 
-#	lcd.line4("")	# bo sie zmieniaja wartosci w zaleznosci od wybiwranego zrodla
+#	lcd.line4("")	# bo sie zmieniaja wartosci w zaleznosci od wybieranego zrodla
 	return
 
 # Display search (Station or Track)
