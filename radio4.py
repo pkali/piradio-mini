@@ -2,7 +2,7 @@
 #
 # Raspberry Pi Internet Radio
 # using an HD44780 LCD display
-# $Id: radio4.py,v 1.111 2016/08/07 13:33:49 bob Exp $
+# $Id: radio4.py,v 1.108 2016/01/31 13:34:22 bob Exp $
 #
 # Author : Bob Rathbone
 # Site   : http://www.bobrathbone.com
@@ -35,7 +35,7 @@ import traceback
 # Class imports
 from radio_daemon import Daemon
 from radio_class import Radio
-from lcd_class import Lcd
+from lcd_lcdproc_class import Lcd_lcdproc
 from log_class import Log
 from rss_class import Rss
 from config_class import Configuration  # for configuration read (Pecus)
@@ -54,7 +54,7 @@ PlaylistsDirectory = "/var/lib/mpd/playlists/"
 
 log = Log()
 radio = Radio()
-lcd = Lcd()
+lcd = Lcd_lcdproc()
 rss = Rss()
 config = Configuration()	# for configuration read (Pecus)
 
@@ -414,7 +414,7 @@ def get_switch_states(lcd,radio,rss):
 				unmuteRadio(lcd,radio)
 
 			if display_mode == radio.MODE_SOURCE:
-				radio.toggleSource(UP)
+				radio.toggleSource()
 				#radio.setReload(True)
 
 			elif display_mode == radio.MODE_SEARCH:
@@ -443,7 +443,7 @@ def get_switch_states(lcd,radio,rss):
 				unmuteRadio(lcd,radio)
 
 			if display_mode == radio.MODE_SOURCE:
-				radio.toggleSource(DOWN)
+				radio.toggleSource()
 				#radio.setReload(True)
 
 			elif display_mode == radio.MODE_SEARCH:
@@ -880,12 +880,12 @@ def display_search(lcd,radio):
 	index = radio.getSearchIndex()
 	source = radio.getSource()
 	current_id = radio.getCurrentID()
+	#lcd.line1("Search:" + str(index + 1))
 
 	if source == radio.PLAYER:
-		lcd.line1("Search:" + str(index + 1))
 		current_artist = radio.getArtistName(index)
-		lcd.scroll2(current_artist[0:160],interrupt) 
-		lcd.scroll3(radio.getTrackNameByIndex(index),interrupt) 
+		lcd.line2(current_artist[0:19]) 
+		lcd.line3(radio.getTrackNameByIndex(index)) 
 		lcd.line4(radio.getProgress())
 	elif source == radio.PANDORA:
 		lcd.line1("Search:" + str(radio.pandora_search_index + 1))
@@ -1049,7 +1049,7 @@ def displayInfo(lcd,ipaddr,mpd_version):
 	lcd.line3(mpd_version)
 	lcd.line4("GPIO version " + GPIO.VERSION)
 	if ipaddr is "":
-		lcd.line3("No IP network")
+		lcd.line1("No IP network")
 	else:
 		lcd.scroll1("IP "+ ipaddr,interrupt)
 	return
