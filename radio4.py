@@ -342,9 +342,6 @@ def get_switch_states(lcd,radio,rss):
 
 	if switch == menu_switch:
 		log.message("MENU switch", log.DEBUG)
-		if radio.muted():
-			unmuteRadio(lcd,radio)
-
 		# Shutdown if menu button held for > 3 seconds
 		MenuSwitch = GPIO.input(menu_switch)
 		count = 15
@@ -357,15 +354,19 @@ def get_switch_states(lcd,radio,rss):
 				MenuSwitch = False
 				radio.setDisplayMode(radio.MODE_SHUTDOWN)
 
-		# Send remote code (simulate IR remote key)
-		udpSend('KEY_OK')
+		if display_mode == radio.MODE_SLEEP:
+			# Send remote code (simulate IR remote key)
+			udpSend('KEY_WAKEUP')
+		else:
+			if radio.muted():
+				unmuteRadio(lcd,radio)
+			# Send remote code (simulate IR remote key)
+			udpSend('KEY_OK')
 
 	elif switch == up_switch:
 		log.message("UP switch display_mode " + str(display_mode), log.DEBUG)
 
 		if  display_mode != radio.MODE_SLEEP:
-			if radio.muted():
-				unmuteRadio(lcd,radio)
 
 			if display_mode == radio.MODE_TIME:
 				# Send remote code (simulate IR remote key)
@@ -382,8 +383,6 @@ def get_switch_states(lcd,radio,rss):
 		log.message("DOWN switch display_mode " + str(display_mode), log.DEBUG)
 
 		if  display_mode != radio.MODE_SLEEP:
-			if radio.muted():
-				unmuteRadio(lcd,radio)
 
 			if display_mode == radio.MODE_TIME:
 				# Send remote code (simulate IR remote key)
@@ -647,12 +646,11 @@ def unmuteRadio(lcd,radio):
 	radio.unmute()
 	volume = radio.getVolume()
 	lcd.line4("Volume " + str(VolumeToDisplay(volume)))
-	radio.setDisplayMode(radio.MODE_TIME)
+#	radio.setDisplayMode(radio.MODE_TIME)
 	return
 
 # Options menu
 def display_options(lcd,radio):
-
 	option = radio.getOption()
 
 	if option != radio.TIMER and option != radio.ALARM \
