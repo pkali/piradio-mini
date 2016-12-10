@@ -233,7 +233,6 @@ class MyDaemon(Daemon):
 
 			elif display_mode == radio.MODE_SLEEP:
 				msg = '  ' + todaysdate  # extra 2 spaces before time (Pecus)
-				#lcd.line1(msg)  # (Pecus)
 				lcd.line2(msg)  # in sleep mode time and date in second line of LCD (Pecus)
 				display_sleep(lcd,radio)
 
@@ -261,7 +260,7 @@ class MyDaemon(Daemon):
 				time.sleep(1)
 			else:
 				time.sleep(0.1)
-
+			
 			# End of main processing loop
 
 	def status(self):
@@ -448,133 +447,6 @@ def DisplayExitMessage(lcd):
 	lcd.line4("")
 	return
 
-# Cycle through the options
-# Only display reload the library if in PLAYER mode
-def cycle_options(radio,direction):
-
-	option = radio.getOption()
-	log.message("cycle_options  direction:" + str(direction)  
-		+ " option: " + str(option), log.DEBUG) 
-
-	if direction == UP:
-		option += 1
-	else:
-		option -= 1
-
-	# Don't display reload if not player mode
-	source = radio.getSource()
-	if option == radio.RELOADLIB:
-		if source != radio.PLAYER:
-			if direction == UP:
-				option = option+1
-			else:
-				option = option-1
-
-	if option == radio.STREAMING:
-		if not radio.streamingAvailable():
-			if direction == UP:
-				option = option+1
-			else:
-				option = option-1
-
-	if option > radio.OPTION_LAST:
-		option = radio.RANDOM
-	elif option < 0:
-		if source == radio.PLAYER:
-			option = radio.OPTION_LAST
-		else:
-			option = radio.OPTION_LAST-1
-
-	radio.setOption(option)
-	radio.optionChangedTrue()
-	return
-
-
-# Toggle random mode (Certain options not allowed if RADIO)
-def toggle_option(radio,lcd,direction):
-	option = radio.getOption() 
-	log.message("toggle_option option="+ str(option), log.DEBUG)
-
-	if option == radio.RANDOM:
-		if radio.getRandom():
-			radio.randomOff()
-		else:
-			radio.randomOn()
-
-	elif option == radio.CONSUME:
-		if radio.getSource() == radio.PLAYER:
-			if radio.getConsume():
-				radio.consumeOff()
-			else:
-				radio.consumeOn()
-		else:
-			lcd.line2("Not allowed")
-			time.sleep(2)
-
-	elif option == radio.REPEAT:
-		if radio.getRepeat():
-			radio.repeatOff()
-		else:
-			radio.repeatOn()
-
-	elif option == radio.TIMER:
-		TimerChange = True
-
-		# Buttons held in
-		if radio.getTimer():
-			while TimerChange:
-				if direction == UP:
-					radio.incrementTimer(1)
-					lcd.line2("Timer " + radio.getTimerString())
-					TimerChange = GPIO.input(right_switch)
-				else:
-					radio.decrementTimer(1)
-					lcd.line2("Timer " + radio.getTimerString())
-					TimerChange = GPIO.input(left_switch)
-				time.sleep(0.1)
-		else:
-			radio.timerOn()
-
-	elif option == radio.ALARM:
-		log.message("toggle_option radio.ALARM", log.DEBUG)
-		radio.alarmCycle(direction)
-		
-	elif option == radio.ALARMSETHOURS or option == radio.ALARMSETMINS:
-
-		# Buttons held in
-		AlarmChange = True
-		twait = 0.4
-		value = 1
-		unit = " mins"
-		if option == radio.ALARMSETHOURS:
-			value = 60
-			unit = " hours"
-		while AlarmChange:
-			if direction == UP:
-				radio.incrementAlarm(value)
-				lcd.line2("Alarm " + radio.getAlarmTime() + unit)
-				time.sleep(twait)
-				AlarmChange = GPIO.input(right_switch)
-			else:
-				radio.decrementAlarm(value)
-				lcd.line2("Alarm " + radio.getAlarmTime() + unit)
-				time.sleep(twait)
-				AlarmChange = GPIO.input(left_switch)
-			twait = 0.1
-
-	elif option == radio.STREAMING:
-		radio.toggleStreaming()
-			
-	elif option == radio.RELOADLIB:
-		if radio.getUpdateLibrary():
-			radio.setUpdateLibOff()
-		else:
-			radio.setUpdateLibOn()
-
-	radio.optionChangedTrue()
-	return
-
-
 # Update music library
 def update_library(lcd,radio):
 	log.message("Updating library", log.INFO)
@@ -582,7 +454,6 @@ def update_library(lcd,radio):
 	lcd.line2("Please wait")
 	radio.updateLibrary()
 	return
-
 
 # Reload if new source selected (RADIO or PLAYER)
 def reload(lcd,radio):
@@ -606,15 +477,13 @@ def reload(lcd,radio):
 		lcd.line2("Media library")
 		radio.loadMedia()
 		current = radio.execMpcCommand("current")
-#		if len(current) < 1: # (Pecus)
 		if len(current) < 1 or radio.getUpdateLibrary() or config.media_update: # If uptade flags set, update library on source switch (Pecus)
 			update_library(lcd,radio)
-	
+
 	elif source == radio.PANDORA:
 		lcd.line2("Pandora radio")
 		radio.loadPandora()
-		#current = radio.execMpcCommand("current")
-		
+
 	return
 
 # Display the RSS feed
@@ -684,15 +553,12 @@ def display_current(lcd,radio,toggleScrolling):
 
 # Display if in sleep
 def display_sleep(lcd,radio):
-	#message = 'Sleep mode'  # (Pecus)
 	message = ''  # I don't like text "Sleep mode" in sleep mode (Pecus)
 	lcd.setBright(False)  # LCD backlight brightness to low (Pecus)
 	lcd.line1('')  # time is now in second line, therefore we clean first line (Pecus)
 	if radio.alarmActive():
 		message = "Alarm " + radio.getAlarmTime()
 	lcd.line4(message)
-	#lcd.line2('')  # (Pecus)
-	#lcd.line3('')  # in line 3 RSS (Pecus)
 	if config.rss:	# RSS in standby only if on in config file (Pecus)
 		rss_line = rss.getFeed()  # (Pecus)
 		lcd.setScrollSpeed(0.2) # Scroll RSS a bit faster  # (Pecus)
@@ -705,7 +571,6 @@ def display_sleep(lcd,radio):
 def get_stored_id(current_file):
 	current_id = 5
 	if os.path.isfile(current_file):
-		# current_id = int(exec_cmd("cat " + current_file) ) # (Pecus)
 		current_id = int(readFromFile(current_file) ) # (Pecus)
 	return current_id
 
@@ -749,17 +614,6 @@ def display_source_select(lcd,radio):
 	elif source == radio.PANDORA:
 		lcd.line2("Pandora Radio")
 
-#	progress = radio.getProgress()
-#	if radio.muted():
-#		lcd.line4('Sound muted')
-#	else:
-#		# Is the radio actually playing ?
-#		if progress.find('/0:00') > 0:
-#			lcd.line4("Volume " + str(radio.getVolume()))
-#		else:
-#			lcd.line4(radio.getProgress()) 
-
-#	lcd.line4("")	# bo sie zmieniaja wartosci w zaleznosci od wybieranego zrodla
 	return
 
 # Display search (Station or Track)
@@ -787,7 +641,6 @@ def display_search(lcd,radio):
 		lcd.line3("Current station:" + str(radio.getCurrentID()))
 		lcd.scroll2(current_station[0:160],interrupt) 
 	return
-
 
 # Unmute radio and get stored volume
 def unmuteRadio(lcd,radio):
@@ -979,7 +832,7 @@ def checkState(radio):
 			unmuteRadio(lcd,radio)
 			radio.setDisplayMode(radio.MODE_TIME)
 	return paused
-			
+
 # Send button data to radio program
 def udpSend(button):
 	udpport = config.getRemoteUdpPort()
@@ -1005,7 +858,7 @@ def udpSend(button):
 		log.message("radio4.udpSend server sent: " + data, log.DEBUG)
 	return data
 
-			
+
 ### Main routine ###
 if __name__ == "__main__":
 	daemon = MyDaemon('/var/run/radiod.pid')
