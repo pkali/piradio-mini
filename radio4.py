@@ -25,6 +25,7 @@ import signal
 import subprocess
 import sys
 import time
+import socket
 import string
 import datetime 
 from time import strftime
@@ -344,24 +345,6 @@ def get_switch_states(lcd,radio,rss):
 		log.message("MENU switch", log.DEBUG)
 		if radio.muted():
 			unmuteRadio(lcd,radio)
-		
-		display_mode = display_mode + 1
-
-		# Skip RSS mode if not available
-		if display_mode == radio.MODE_RSS:
-			if rss.isAvailable() and not radio.optionChanged():
-				lcd.line3("Getting RSS feed")
-			else:
-				display_mode = display_mode + 1
-
-		if display_mode > radio.mode_last:
-                        boardrevision = radio.getBoardRevision()
-                        lcd.init(boardrevision) # Recover corrupted display
-			display_mode = radio.MODE_TIME
-
-		radio.setDisplayMode(display_mode)
-		log.message("New mode " + radio.getDisplayModeString()+
-					"(" + str(display_mode) + ")", log.DEBUG)
 
 		# Shutdown if menu button held for > 3 seconds
 		MenuSwitch = GPIO.input(menu_switch)
@@ -375,36 +358,8 @@ def get_switch_states(lcd,radio,rss):
 				MenuSwitch = False
 				radio.setDisplayMode(radio.MODE_SHUTDOWN)
 
-#		if radio.getUpdateLibrary():		# It does not work so... out (Pecus)
-#			update_library(lcd,radio)	# (Pecus)
-#			radio.setDisplayMode(radio.MODE_TIME)  # (Pecys)
-#
-#		elif radio.getReload(): # (Pecus)
-		if radio.getReload(): 	# (Pecus)
-			source = radio.getSource()
-			log.message("Reload " + str(source), log.INFO)
-			lcd.line2("Reloading ")
-			reload(lcd,radio)
-			radio.setReload(False)
-			radio.setDisplayMode(radio.MODE_TIME)
-
-		elif radio.optionChanged(): 
-			log.message("optionChanged", log.DEBUG)
-			if radio.alarmActive() and not radio.getTimer() \
-				and (option == radio.ALARMSETHOURS or option == radio.ALARMSETMINS):
-				radio.setDisplayMode(radio.MODE_SLEEP)
-				radio.mute()
-			else:
-				radio.setDisplayMode(radio.MODE_TIME)
-
-			radio.optionChangedFalse()
-
-		elif radio.loadNew():
-			log.message("Load new  search=" + str(radio.getSearchIndex()), log.DEBUG)
-			radio.playNew(radio.getSearchIndex())
-			radio.setDisplayMode(radio.MODE_TIME)
-
-		interrupt = True
+		# Send remote code (simulate IR remote key)
+		udpSend('KEY_OK')
 
 	elif switch == up_switch:
 		log.message("UP switch display_mode " + str(display_mode), log.DEBUG)
@@ -413,25 +368,14 @@ def get_switch_states(lcd,radio,rss):
 			if radio.muted():
 				unmuteRadio(lcd,radio)
 
-			if display_mode == radio.MODE_SOURCE:
-				radio.toggleSource(UP)
-				#radio.setReload(True)
-
-			elif display_mode == radio.MODE_SEARCH:
-				wait = 0.5
-				while GPIO.input(up_switch):
-					radio.getNext(UP)
-					display_search(lcd,radio)
-					time.sleep(wait)
-					wait = 0.1
-
-			elif display_mode == radio.MODE_OPTIONS:
-				cycle_options(radio,UP)
+			if display_mode == radio.MODE_TIME:
+				# Send remote code (simulate IR remote key)
+				udpSend('KEY_CHANNELUP')
 
 			else:
-				radio.channelUp()
+				# Send remote code (simulate IR remote key)
+				udpSend('KEY_UP')
 
-			interrupt = True
 		else:
 			DisplayExitMessage(lcd)
 
@@ -442,24 +386,14 @@ def get_switch_states(lcd,radio,rss):
 			if radio.muted():
 				unmuteRadio(lcd,radio)
 
-			if display_mode == radio.MODE_SOURCE:
-				radio.toggleSource(DOWN)
-				#radio.setReload(True)
-
-			elif display_mode == radio.MODE_SEARCH:
-				wait = 0.5
-				while GPIO.input(down_switch):
-					radio.getNext(DOWN)
-					display_search(lcd,radio)
-					time.sleep(wait)
-					wait = 0.1
-
-			elif display_mode == radio.MODE_OPTIONS:
-				cycle_options(radio,DOWN)
+			if display_mode == radio.MODE_TIME:
+				# Send remote code (simulate IR remote key)
+				udpSend('KEY_CHANNELDOWN')
 
 			else:
-				radio.channelDown()
-			interrupt = True
+				# Send remote code (simulate IR remote key)
+				udpSend('KEY_DOWN')
+
 		else:
 			DisplayExitMessage(lcd)
 
@@ -467,43 +401,19 @@ def get_switch_states(lcd,radio,rss):
 		log.message("LEFT switch" ,log.DEBUG)
 
 		if  display_mode != radio.MODE_SLEEP:
-			if display_mode == radio.MODE_OPTIONS:
-				toggle_option(radio,lcd,DOWN)
-				interrupt = True
 
-			elif display_mode == radio.MODE_SEARCH and input_source == radio.PLAYER:
-				wait = 0.5
-				while GPIO.input(left_switch):
-					radio.findNextArtist(DOWN)
-					display_search(lcd,radio)
-					time.sleep(wait)
-					wait = 0.1
-				interrupt = True
-
-			elif display_mode == radio.MODE_OPTIONS:
-				interrupt = True
+			if display_mode == radio.MODE_TIME:
+				if GPIO.input(right_switch):
+					# Send remote code (simulate IR remote key)
+					udpSend('KEY_MUTE')
+				else:
+					# Send remote code (simulate IR remote key)
+					udpSend('KEY_VOLUMEDOWN')
 
 			else:
-				# Decrease volume
-				volChange = True
-				while volChange:
-					# Mute function (Both buttons depressed)
-					if GPIO.input(right_switch):
-						radio.mute()
-						if radio.alarmActive():
-							radio.setDisplayMode(radio.MODE_SLEEP)
-							interrupt = True
-						displayVolume(lcd,radio)
-						time.sleep(2)
-						volChange = False
-						interrupt = True
-					else:
-						volume = radio.decreaseVolume()
-						displayVolume(lcd,radio)
-						volChange = GPIO.input(left_switch)
-						if volume <= 0:
-							volChange = False
-						time.sleep(0.1)
+				# Send remote code (simulate IR remote key)
+				udpSend('KEY_LEFT')
+
 		else:
 			DisplayExitMessage(lcd)
 
@@ -511,42 +421,19 @@ def get_switch_states(lcd,radio,rss):
 		log.message("RIGHT switch" ,log.DEBUG)
 
 		if  display_mode != radio.MODE_SLEEP:
-			if display_mode == radio.MODE_OPTIONS:
-				toggle_option(radio,lcd,UP)
-				interrupt = True
 
-			elif display_mode == radio.MODE_SEARCH and input_source == radio.PLAYER:
-				wait = 0.5
-				while GPIO.input(right_switch):
-					radio.findNextArtist(UP)
-					display_search(lcd,radio)
-					time.sleep(wait)
-					wait = 0.1
-				interrupt = True
+			if display_mode == radio.MODE_TIME:
+				if GPIO.input(left_switch):
+					# Send remote code (simulate IR remote key)
+					udpSend('KEY_MUTE')
+				else:
+					# Send remote code (simulate IR remote key)
+					udpSend('KEY_VOLUMEUP')
 
-			elif display_mode == radio.MODE_OPTIONS:
-				interrupt = True
 			else:
-				# Increase volume
-				volChange = True
-				while volChange:
-					# Mute function (Both buttons depressed)
-					if GPIO.input(left_switch):
-						radio.mute()
-						if radio.alarmActive():
-							radio.setDisplayMode(radio.MODE_SLEEP)
-							interrupt = True
-						displayVolume(lcd,radio)
-						time.sleep(2)
-						volChange = False
-						interrupt = True
-					else:
-						volume = radio.increaseVolume()
-						displayVolume(lcd,radio)
-						volChange =  GPIO.input(right_switch)
-						if volume >= 100:
-							volChange = False
-						time.sleep(0.1)
+				# Send remote code (simulate IR remote key)
+				udpSend('KEY_RIGHT')
+
 		else:
 			DisplayExitMessage(lcd)
 
@@ -1093,6 +980,32 @@ def checkState(radio):
 			radio.setDisplayMode(radio.MODE_TIME)
 	return paused
 			
+# Send button data to radio program
+def udpSend(button):
+	udpport = config.getRemoteUdpPort()
+	udphost = config.getRemoteUdpHost()
+	data = ''
+	log.message("radio4.udpSend " + button, log.DEBUG)
+	
+	try:
+		clientsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		clientsocket.settimeout(3)
+		clientsocket.sendto(button, (udphost, udpport))
+		data = clientsocket.recv(100).strip()
+
+	except socket.error, e:
+		err = e.args[0]
+		if err == errno.EAGAIN or err == errno.EWOULDBLOCK:
+			log.message("radio4.udpSend no data" + e, log.ERROR)
+		else:
+			# Errors such as timeout
+			log.message("radio4.udpSend " + str(e), log.ERROR)
+
+	if len(data) > 0:
+		log.message("radio4.udpSend server sent: " + data, log.DEBUG)
+	return data
+
+			
 ### Main routine ###
 if __name__ == "__main__":
 	daemon = MyDaemon('/var/run/radiod.pid')
@@ -1119,4 +1032,3 @@ if __name__ == "__main__":
 		sys.exit(2)
 
 # End of script 
-
