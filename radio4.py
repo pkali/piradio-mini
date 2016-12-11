@@ -440,7 +440,7 @@ def get_switch_states(lcd,radio,rss):
 # Sleep exit message
 def DisplayExitMessage(lcd):
 	lcd.line3("Press menu button to")
-	lcd.line4("exit sleep mode")
+	lcd.line4("  exit sleep mode")
 	time.sleep(1)
 	lcd.line3("")
 	lcd.line4("")
@@ -770,16 +770,17 @@ def displayWakeUpMessage(lcd):
 
 def displayShutdown(lcd):
 	lcd.setBright(False)  # LCD backlight brightness to low (Pecus)
-	lcd.line1("Stopping radio")
+	lcd.line1("   Stopping radio")
 	radio.execCommand("service mpd stop")
 	radio.pandora_stop()
+	lcd.line2(" ")
 	lcd.line3(" ")
 	lcd.line4(" ")
 	radio.execCommand("shutdown -h now")
-	lcd.line2("Shutdown issued")
+	lcd.line2("   Shutdown issued")
 	time.sleep(3)
-	lcd.line1("Radio stopped")
-	lcd.line2("Power off radio")
+	lcd.line1("   Radio stopped")
+	lcd.line2("  Power off radio")
 	return
 
 def displayInfo(lcd,ipaddr,mpd_version):
