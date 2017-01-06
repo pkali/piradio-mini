@@ -12,5 +12,14 @@ rm -r /usr/share/piradio-mini-master
 # Remove github file
 rm /home/pi/piradionew.zip
 
+# Check for additional update script
+if [ -f "/usr/share/radio/html/scripts/update.sh" ]
+then
+	# Call update script
+	/usr/share/radio/html/scripts/update.sh
+	# Remove update script
+	rm /usr/share/radio/html/scripts/update.sh
+fi
+
 # Reboot after update
 reboot
