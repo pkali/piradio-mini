@@ -165,6 +165,7 @@ if (isset($msg)) {
 		echo "  window.location.href = 'index.html';\r\n";
 		echo "}, 5000);\r\n";
 		echo "</script>\r\n";
+		$end = shell_exec('sudo ./scripts/new_stationlist.sh');
 	} elseif ($msg == "network") {
 		echo "Not implemented...";
 	} elseif ($msg == "update") {
