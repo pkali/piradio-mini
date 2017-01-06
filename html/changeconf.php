@@ -149,7 +149,22 @@ if (isset($msg)) {
 			echo "</script>\r\n";
 		}
 	} elseif ($msg == "stations") {
-		echo "Not implemented...";
+		echo "<b>New stations list:</b>\r\n";
+		$stations = $_POST['stations'];
+		if ($stations[0] == "#") {
+			$stations = "\r\n".$stations;
+		}
+		$stations_tmp = preg_replace("/\n#.*/", "", $stations);
+		echo "<pre>".htmlspecialchars($stations_tmp)."</pre>";
+		file_put_contents('/var/lib/radiod/stationlist_new', $stations);
+		echo "\r\nStill experimental :)<br>\r\n";
+		echo "Generating new playlist...<br>\r\n";
+		echo "<script>\r\n";
+		echo "// redirect to main after 5 seconds\r\n";
+		echo "window.setTimeout(function() {\r\n";
+		echo "  window.location.href = 'index.html';\r\n";
+		echo "}, 5000);\r\n";
+		echo "</script>\r\n";
 	} elseif ($msg == "network") {
 		echo "Not implemented...";
 	} elseif ($msg == "update") {
