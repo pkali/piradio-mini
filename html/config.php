@@ -131,7 +131,8 @@ echo '<textarea rows="20" cols="80" name="stations">';
 echo $stations;
 echo '</textarea>';
 ?>
-<br><button type="submit" name="submit">Save radio stations list</button>
+<br><button type="submit" name="submit" value="new">Save radio stations list</button>
+<button type="submit" name="submit" value="old">Restore previous list</button>
 </form>
 <hr>
 <a href="changeconf.php?file=restart"><button>PiRadio restart</button></a>

@@ -149,23 +149,68 @@ if (isset($msg)) {
 			echo "</script>\r\n";
 		}
 	} elseif ($msg == "stations") {
-		echo "<b>New stations list:</b>\r\n";
-		$stations = $_POST['stations'];
-		if ($stations[0] == "#") {
-			$stations = "\r\n".$stations;
+		$option = $_POST['submit'];
+		if ($option == "new") {
+			echo "<b>New stations list:</b>\r\n";
+			$stations = $_POST['stations'];
+			if ($stations[0] == "#") {
+				$stations = "\r\n".$stations;
+			}
+			$stations_tmp = preg_replace("/\n#.*/", "", $stations);
+			echo "<pre>".htmlspecialchars($stations_tmp)."</pre>";
+			file_put_contents('/var/lib/radiod/stationlist_new', $stations);
+			chmod("/var/lib/radiod/stationlist_new", 0755);
+			echo "\r\n";
+			echo '<form action="changeconf.php?file=stations" method="post">';
+			echo "\r\n";
+			echo '<button type="submit" name="submit" value="ok">Confirm new list</button>';
+			echo "\r\n";
+			echo '<button type="submit" name="submit" value="no">Cancel</button>';
+		} elseif ($option == "old") {
+			if (file_exists( "/var/lib/radiod/stationlist_old" )) {
+				echo "<b>New stations list:</b>\r\n";
+				$stations = file_get_contents( "/var/lib/radiod/stationlist_old" );
+				if ($stations[0] == "#") {
+					$stations = "\r\n".$stations;
+				}
+				$stations_tmp = preg_replace("/\n#.*/", "", $stations);
+				echo "<pre>".htmlspecialchars($stations_tmp)."</pre>";
+				file_put_contents('/var/lib/radiod/stationlist_new', $stations);
+				chmod("/var/lib/radiod/stationlist_new", 0755);
+				echo "\r\n";
+				echo '<form action="changeconf.php?file=stations" method="post">';
+				echo "\r\n";
+				echo '<button type="submit" name="submit" value="ok">Restore this list</button>';
+				echo "\r\n";
+				echo '<button type="submit" name="submit" value="no">Cancel</button>';
+			} else {
+				echo "<b>No previous stations list.</b>\r\n";
+				echo "<script>\r\n";
+				echo "// redirect to main after 2 seconds\r\n";
+				echo "window.setTimeout(function() {\r\n";
+				echo "  window.location.href = 'index.html';\r\n";
+				echo "}, 2000);\r\n";
+				echo "</script>\r\n";
+			}
+		} elseif ($option == "ok") {
+			echo "<b>Update stations list in progress.</b><br>\r\n";
+			echo "Wait!<br>\r\n";
+			echo "<script>\r\n";
+			echo "// redirect to main after 2 seconds\r\n";
+			echo "window.setTimeout(function() {\r\n";
+			echo "  window.location.href = 'index.html';\r\n";
+			echo "}, 2000);\r\n";
+			echo "</script>\r\n";
+			$end = shell_exec('sudo ./scripts/new_stationlist.sh');
+		} elseif ($option == "no") {
+			echo "<b>Stations list change canceled.</b>\r\n";
+			echo "<script>\r\n";
+			echo "// redirect to main after 2 seconds\r\n";
+			echo "window.setTimeout(function() {\r\n";
+			echo "  window.location.href = 'index.html';\r\n";
+			echo "}, 2000);\r\n";
+			echo "</script>\r\n";
 		}
-		$stations_tmp = preg_replace("/\n#.*/", "", $stations);
-		echo "<pre>".htmlspecialchars($stations_tmp)."</pre>";
-		file_put_contents('/var/lib/radiod/stationlist_new', $stations);
-		echo "\r\nStill experimental :)<br>\r\n";
-		echo "Generating new playlist...<br>\r\n";
-		echo "<script>\r\n";
-		echo "// redirect to main after 5 seconds\r\n";
-		echo "window.setTimeout(function() {\r\n";
-		echo "  window.location.href = 'index.html';\r\n";
-		echo "}, 5000);\r\n";
-		echo "</script>\r\n";
-		$end = shell_exec('sudo ./scripts/new_stationlist.sh');
 	} elseif ($msg == "network") {
 		echo "Not implemented...";
 	} elseif ($msg == "update") {
