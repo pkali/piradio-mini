@@ -455,9 +455,15 @@ for line in open(StationList,'r'):
 		filenumber += 1
 		continue
 
+	# Set timeout depending on the parameter
+	if deleteOld:
+		timeo = 1
+	else:
+		timeo = 10
+
 	# Get the published URL to the stream file
 	try:
-		file = urllib2.urlopen(url)
+		file = urllib2.urlopen(url, timeout=timeo)
 		data = file.read()
 		file.close()
 		# Creat list from data
