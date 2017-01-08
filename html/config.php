@@ -127,7 +127,7 @@ Radio stations config
 /* Folder /var/lib/radiod/ musi miec uprawnienia 755
    inaczej nie da sie stad odczytac plik w nim umieszczony */
 $stations = file_get_contents( "/var/lib/radiod/stationlist" );
-echo '<textarea rows="20" cols="80" name="stations">';
+echo '<textarea rows="20" name="stations" style="width: 100%">';
 echo $stations;
 echo '</textarea>';
 ?>
