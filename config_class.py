@@ -30,6 +30,7 @@ class Configuration:
 	# Input source
 	RADIO = 0
 	PLAYER = 1
+	PANDORA = 2
 	LIST = 0
 	STREAM = 1
 
@@ -186,6 +187,8 @@ class Configuration:
 				elif option == 'startup':
 					if parameter == 'MEDIA':
 						self.source =  self.PLAYER
+					elif parameter == 'PANDORA':
+						self.source =  self.PANDORA
 
 				elif option == 'station_names':
 					if parameter == 'stream':
@@ -282,6 +285,10 @@ class Configuration:
 					msg = "Invalid option " + option + ' in section ' \
 						+ section + ' in ' + ConfigFile
 					log.message(msg,log.ERROR)
+
+			if self.source == self.PANDORA:
+				if not self.pandora_available:
+					self.source = self.RADIO
 
 			range = self.volume_max - self.volume_min
 			if range < 22:
