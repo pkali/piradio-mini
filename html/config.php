@@ -85,12 +85,22 @@ Media network folder config
 /* Folder /var/lib/radiod/ musi miec uprawnienia 755
    inaczej nie da sie stad odczytac plik w nim umieszczony */
 $netshare = file_get_contents( "/var/lib/radiod/share" );
-echo "<input type='text' name='media' value='";
-echo $netshare;
-echo "' style='width: 100%'>";
+preg_match('/user=\".*\",pass/', $netshare, $matches);
+preg_match('/\".*\"/', $matches[0], $matches);
+$share_user = substr($matches[0], 1 ,-1);
+preg_match('/password=\".*\",ro/', $netshare, $matches);
+preg_match('/\".*\"/', $matches[0], $matches);
+$share_password = substr($matches[0], 1 ,-1);
+preg_match('/ro \".*\"/', $netshare, $matches);
+preg_match('/\".*\"/', $matches[0], $matches);
+$share_link = substr($matches[0], 1 ,-1);
+echo "<pre><b>";
+echo "Network path: <input type='text' name='media_link' value='".$share_link."' style='width: 80%'><br>";
+echo "Login: <input type='text' name='user' value='".$share_user."'><br>";
+echo "Password: <input type='text' name='password' value='".$share_password."'></b><br>";
 ?>
-<br><button type="submit" name="submit">Save network folder config</button>
-</form>
+<button type="submit" name="submit" value="confirm">Save network folder config</button>
+</pre></form>
 <hr>
 RSS config
 <form action="changeconf.php?file=rss" method="post">

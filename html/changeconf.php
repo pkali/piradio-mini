@@ -212,7 +212,54 @@ if (isset($msg)) {
 			echo "</script>\r\n";
 		}
 	} elseif ($msg == "network") {
-		echo "Not implemented...";
+		$option = $_POST['submit'];
+		if ($option == "confirm") {
+			$login = $_POST["user"];
+			$password = $_POST["password"];
+			$media_link = $_POST["media_link"];
+			if ($media_link == "") {
+				$share_string = '';
+			} else {
+				if ($login == "") {
+					$share_string = 'mount.cifs -o ro "'.$media_link.'" /share';
+				} else {
+					$share_string = 'mount.cifs -o user="'.$login.'",password="'.$password.'",ro "'.$media_link.'" /share';
+				}
+			}
+			echo $end;
+			echo "New network media folder configuration.\r\n";
+			echo "<pre>Network path: <b>".$media_link."</b>\r\n";
+			echo "Login: <b>".$login."</b>\r\n";
+			echo "Password: <b>".$password."</b>\r\n";
+			echo "Shell command: <b>".$share_string."</b></pre>\r\n";
+			echo '<form action="changeconf.php?file=network" method="post">';
+			echo "\r\n";
+			echo "<input type='hidden' name='share_string' value='".$share_string."'><br>\r\n";
+			echo "<button type='submit' name='submit' value='ok'>Confirm network folder config</button>";
+			echo "\r\n";
+			echo "<button type='submit' name='submit' value='no'>Cancel</button>";
+			echo "\r\n";
+		} elseif ($option == "ok") {
+			echo "<b>Update network folder config.</b><br>\r\n";
+			echo "Wait!<br>\r\n";
+			echo "<script>\r\n";
+			echo "// redirect to main after 2 seconds\r\n";
+			echo "window.setTimeout(function() {\r\n";
+			echo "  window.location.href = 'index.html';\r\n";
+			echo "}, 2000);\r\n";
+			echo "</script>\r\n";
+			$share_string = $_POST["share_string"];
+			file_put_contents('/var/lib/radiod/share', $share_string);
+			chmod("/var/lib/radiod/share", 0755);
+		} elseif ($option == "no") {
+			echo "<b>Network folder config change canceled.</b>\r\n";
+			echo "<script>\r\n";
+			echo "// redirect to main after 2 seconds\r\n";
+			echo "window.setTimeout(function() {\r\n";
+			echo "  window.location.href = 'index.html';\r\n";
+			echo "}, 2000);\r\n";
+			echo "</script>\r\n";
+		}
 	} elseif ($msg == "update") {
 		$confirmation = $_POST["submit"];
 		if ($confirmation == "yes") {
