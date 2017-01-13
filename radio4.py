@@ -198,7 +198,7 @@ class MyDaemon(Daemon):
 				if input_source == radio.RADIO:
 					msg = "r"
 				elif input_source == radio.PLAYER:
-					msg = "o"
+					msg = "m"
 				elif input_source == radio.PANDORA:
 					msg = "p"
 				msg = msg + ' ' + todaysdate  # extra space before time (Pecus)
