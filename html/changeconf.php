@@ -318,7 +318,7 @@ if (isset($msg)) {
 		echo "Startup source: ";
 		switch ($startup) {
 			case 'RADIO':
-				echo "Southcast radio";
+				echo "SHOUTcast radio";
 				break;
 			case 'MEDIA':
 				echo "Media player";

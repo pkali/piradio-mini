@@ -84,7 +84,7 @@ if ( $piradio_array['startup'] == 'RADIO' ) {
   } else {
   echo ">";
   }
-echo "Southcast radio</option>\r\n";
+echo "SHOUTcast radio</option>\r\n";
 echo "  <option value='MEDIA'";
 if ( $piradio_array['startup'] == 'MEDIA' ) {
   echo "selected>";
