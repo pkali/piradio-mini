@@ -16,6 +16,10 @@ Global PiRadio config<br>
 $piradio = file_get_contents( "/etc/radiod.conf" );
 $piradio_array = parse_ini_string($piradio);
 $write_conf = false;
+if (!isset($piradio_array['startup'])) {
+	$piradio = $piradio."\r\n# Startup option either RADIO, MEDIA (USB stick) or PANDORA\r\nstartup=RADIO\r\n";
+	$write_conf = true;
+}
 if (!isset($piradio_array['rss'])) {
 	$piradio = $piradio."\r\n# RSS in standby (Pecus)\r\nrss=no\r\n";
 	$write_conf = true;
@@ -73,6 +77,29 @@ if ( $piradio_array['pandora_available'] ) {
   }
 echo ' Pandora available.';
 echo '</b><br>';
+echo "Startup source: <select name='startup'>\r\n";
+echo "  <option value='RADIO'";
+if ( $piradio_array['startup'] == 'RADIO' ) {
+  echo "selected>";
+  } else {
+  echo ">";
+  }
+echo "Southcast radio</option>\r\n";
+echo "  <option value='MEDIA'";
+if ( $piradio_array['startup'] == 'MEDIA' ) {
+  echo "selected>";
+  } else {
+  echo ">";
+  }
+echo "Media player</option>\r\n";
+echo "  <option value='PANDORA'";
+if ( $piradio_array['startup'] == 'PANDORA' ) {
+  echo "selected>";
+  } else {
+  echo ">";
+  }
+echo "Pandora radio</option>\r\n";
+echo "</select>\r\n";
 ?>
 <button type="submit" name="submit">Save Global PiRadio config</button>
 </pre>

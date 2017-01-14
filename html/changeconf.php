@@ -217,6 +217,7 @@ if (isset($msg)) {
 			$login = $_POST["user"];
 			$password = $_POST["password"];
 			$media_link = $_POST["media_link"];
+			$media_link = str_replace('\\', '/', $media_link);
 			if ($media_link == "") {
 				$share_string = '';
 			} else {
@@ -295,11 +296,14 @@ if (isset($msg)) {
 		$bright = (isset($_POST['bright'])) ? "bright=yes" : "bright=no";
 		$media_update = (isset($_POST['media_update'])) ? "media_update=yes" : "media_update=no";
 		$pandora_available = (isset($_POST['pandora_available'])) ? "pandora_available=yes" : "pandora_available=no";
+		$startup = $_POST['startup'];
+		$startup_string = "startup=".$startup;
 		$piradio = file_get_contents( "/etc/radiod.conf" );
 		$piradio_new = preg_replace("/\nrss *= *.*/", "\n".$rss, $piradio);
 		$piradio_new = preg_replace("/\nbright *= *.*/", "\n".$bright, $piradio_new);
 		$piradio_new = preg_replace("/\nmedia_update *= *.*/", "\n".$media_update, $piradio_new);
 		$piradio_new = preg_replace("/\npandora_available *= *.*/", "\n".$pandora_available, $piradio_new);
+		$piradio_new = preg_replace("/\nstartup *= *.*/", "\n".$startup_string, $piradio_new);
 		$piradio_array = parse_ini_string($piradio_new);
 		$rss = ($piradio_array['rss']) ? "yes" : "no";
 		$bright = ($piradio_array['bright']) ? "yes" : "no";
@@ -311,6 +315,19 @@ if (isset($msg)) {
 		echo "LCD high brightness: ".$bright."<br>";
 		echo "Always update library: ".$media_update."<br>";
 		echo "Pandora available: ".$pandora_available."<br>";
+		echo "Startup source: ";
+		switch ($startup) {
+			case 'RADIO':
+				echo "Southcast radio";
+				break;
+			case 'MEDIA':
+				echo "Media player";
+				break;
+			case 'PANDORA':
+				echo "Pandora radio";
+				break;
+		}
+		echo "<br>";
 		file_put_contents('/etc/radiod.conf', $piradio_new);
 		chmod("/etc/radiod.conf", 0755);
 	} elseif ($msg == "pandora") {
