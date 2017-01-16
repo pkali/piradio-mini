@@ -21,6 +21,12 @@ if (is_numeric($github_version_date)) {
 	echo "GitHub PiRadio version: <b>".$github_version."</b>. Last commit: <b>".date("d.m.Y H:i:s",$github_version_date)."</b>.";
 	echo "<br><br>Do you really want to update your PiRadio from github repository.<br>";
 	echo "<br>After update your PiRadio will be rebooted!</pre>";
+	if (file_exists( "/usr/share/piradio-mini-master/html/scripts/update.sh" )) {
+		echo "<pre><b>Warning!<br>";
+		echo "This update includes additional system upgrades.<br>";
+		echo "The update procedure may take more than 5 minutes.<br>";
+		echo "Do not turn off the PiRadio until a full restart.</b></pre>";
+	}
 } else {
 	echo "<b>Problem with download update files from GitHub!!!</b>.</pre>";
 }
