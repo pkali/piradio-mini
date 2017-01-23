@@ -149,9 +149,9 @@ class MyDaemon(Daemon):
 		time.sleep(2.0)
 		 	
 		reload(lcd,radio)
-		radio.play(get_stored_id(CurrentFile))
-		log.message("Current ID = " + str(radio.getCurrentID()), log.INFO)
-		lcd.line3("Radio Station " + str(radio.getCurrentID()))
+		#radio.play(get_stored_id(CurrentFile))
+		#log.message("Current ID = " + str(radio.getCurrentID()), log.INFO)
+		#lcd.line3("Radio Station " + str(radio.getCurrentID()))
 
 		# Set up switch event processing
 		GPIO.add_event_detect(menu_switch, GPIO.RISING, callback=switch_event, bouncetime=200)
