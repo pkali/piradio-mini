@@ -48,9 +48,9 @@ from config_class import Configuration  # for configuration read (Pecus)
 UP = 0
 DOWN = 1
 
-CurrentStationFile = "/var/lib/radiod/current_station"
-CurrentTrackFile = "/var/lib/radiod/current_track"
-CurrentFile = CurrentStationFile
+#CurrentStationFile = "/var/lib/radiod/current_station"
+#CurrentTrackFile = "/var/lib/radiod/current_track"
+#CurrentFile = CurrentStationFile
 PlaylistsDirectory = "/var/lib/mpd/playlists/"
 
 log = Log()
@@ -79,7 +79,7 @@ def signalHandler(signal,frame):
 class MyDaemon(Daemon):
 
 	def run(self):
-		global CurrentFile
+		#global CurrentFile
 
 		GPIO.setmode(GPIO.BCM)       # Use BCM GPIO numbers
 		GPIO.setwarnings(False)      # Ignore warnings
