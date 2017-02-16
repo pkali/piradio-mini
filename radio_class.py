@@ -1634,13 +1634,13 @@ class Radio:
 					x = self.pianobar.expect(pattern_list, timeout=0)
 					if x == 0:
 						# 'SONG: '
-						x = self.pianobar.expect(['\r\n', pexpect.TIMEOUT])
+						x = self.pianobar.expect(['\r\n', pexpect.TIMEOUT], timeout=0)
 						if x == 0: # Artist - Title - from: "Album"
 							self.pandora_song_name = self.pianobar.before
 							self.setInterrupt()		# A to dziala !!!
 					elif x == 1:
 						# 'STATION: '
-						x = self.pianobar.expect([' \| ', pexpect.TIMEOUT])
+						x = self.pianobar.expect([' \| ', pexpect.TIMEOUT], timeout=0)
 						if x == 0:
 							self.pandora_station_name = self.pianobar.before
 					elif x == 2:
@@ -1654,7 +1654,7 @@ class Radio:
 							self.pandora_start()
 						elif x == 1:
 							# jakis blad komunikat zamiast nazwy stacji
-							x = self.pianobar.expect(['\r\n', pexpect.TIMEOUT])
+							x = self.pianobar.expect(['\r\n', pexpect.TIMEOUT], timeout=0)
 							if x == 0:
 								self.pandora_station_name = '***' + self.pianobar.before + '***'
 								self.pandora_song_name = '---------------------'
@@ -1665,7 +1665,7 @@ class Radio:
 							self.pandora_progress = self.pianobar.before
 					if x == 4:
 						# 'Error:' - gramy dalej cisze i zamiast nazwy stacji dajemy komunikat o bledzie
-						x = self.pianobar.expect(['\r\n', pexpect.TIMEOUT])
+						x = self.pianobar.expect(['\r\n', pexpect.TIMEOUT], timeout=0)
 						if x == 0:
 							self.pandora_station_name = '***' + self.pianobar.before + '***'
 							self.pandora_song_name = '---------------------'
@@ -2278,7 +2278,7 @@ class Radio:
 		self.pianobar = pexpect.spawn('sudo -u pi pianobar')
 		# Sprawdzmy bledy sieci czy logowania
 		log.message("radio.pandora_start Wait for pianobar Login...", log.DEBUG)
-		self.pianobar.expect('Login... ')
+		self.pianobar.expect(['Login... ', pexpect.TIMEOUT], timeout=1)
 		log.message("radio.pandora_start Wait LF after Login...", log.DEBUG)
 		x = self.pianobar.expect(['\r\n', pexpect.TIMEOUT], timeout=30)
 		if x == 0:	# nie wisi na login wiec sprawdzamy jaki komunikat
