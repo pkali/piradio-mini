@@ -32,6 +32,9 @@ body {
 	width: 150; 
 	height: 125; 
 }
+#LGbutton {
+	visibility: hidden;
+}
 #config {
 	float: right;
 	text-align: center;

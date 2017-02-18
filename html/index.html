@@ -28,6 +28,10 @@
 <button id="OKbutton">OK</button>
 <button id="RIGHTbutton">&gt;</button><br>
 <button id="DOWNbutton">v</button>
+<div id="speak">
+<button id="LGbutton">LANGUAGE</button><br>
+<button id="INFObutton">INFO</button>
+</div>
 </div>
 <div id="lewebuttony">
 <button id="SLEEPbutton">&nbsp;&nbsp;SLEEP&nbsp;&nbsp;</button>
@@ -86,6 +90,12 @@
  });
  $("#VDOWNbutton").click(function() {
    $.post("button.php?key=KEY_VOLUMEDOWN");
+ });
+ $("#LGbutton").click(function() {
+   $.post("button.php?key=KEY_LANGUAGE");
+ });
+ $("#INFObutton").click(function() {
+   $.post("button.php?key=KEY_INFO");
  });
  $("#MUTEbutton").click(function() {
    $.post("button.php?key=KEY_MUTE");
