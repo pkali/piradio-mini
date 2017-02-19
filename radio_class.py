@@ -1647,7 +1647,7 @@ class Radio:
 						# wisi na odpytywaniu o kolejne utwory ???
 						# to sie pianobarowi przytrafia zbyt czesto
 						# jak wisi, to trzeba ponownie odpalic stacje
-						x = self.pianobar.expect(['Ok.', 'Error: ', pexpect.TIMEOUT], timeout=4)  # czekamy 4s. na Ok, moze sie uda zaladowac, a moze komunikat bledu jest
+						x = self.pianobar.expect(['Ok.', 'Error: ', pexpect.TIMEOUT], timeout=3)  # czekamy 3s. na Ok, moze sie uda zaladowac, a moze komunikat bledu jest
 						if x == 2:
 							# nie udalo sie - restart
 							self.pandora_stop()
@@ -2278,15 +2278,20 @@ class Radio:
 		self.pianobar = pexpect.spawn('sudo -u pi pianobar')
 		# Sprawdzmy bledy sieci czy logowania
 		log.message("radio.pandora_start Wait for pianobar Login...", log.DEBUG)
-		self.pianobar.expect(['Login... ', pexpect.TIMEOUT], timeout=1)
-		log.message("radio.pandora_start Wait LF after Login...", log.DEBUG)
-		x = self.pianobar.expect(['\r\n', pexpect.TIMEOUT], timeout=30)
-		if x == 0:	# nie wisi na login wiec sprawdzamy jaki komunikat
-			pmessage = self.pianobar.before
-		else:
-			pmessage = "Connection timeout error"	# wisi na "Login..." ponad 30 s.
+		x = self.pianobar.expect(['Login... ', pexpect.TIMEOUT], timeout=10)
+		if x == 0:	# Jest Login - czekamy dalej
+			log.message("radio.pandora_start Wait LF after Login...", log.DEBUG)
+			x = self.pianobar.expect(['\r\n', pexpect.TIMEOUT], timeout=25)
+			if x == 0:	# nie wisi na login wiec sprawdzamy jaki komunikat
+				pmessage = self.pianobar.before
+			else:
+				pmessage = "Login timeout error"	# wisi na "Login..." ponad 25 s.
+				log.message("radio.pandora_start kill pianobar proces", log.DEBUG)
+				self.execCommand ("killall pianobar")	# wisi wiec kilujemy
+		else:	# Przez 10s nie pojawilo sie "Login..."
+			pmessage = "Connection timeout error"	# wisi bez "Login..." ponad 10 s.
 			log.message("radio.pandora_start kill pianobar proces", log.DEBUG)
-			self.execCommand ("killall pianobar")	# wisi wiec kilujemy 
+			self.execCommand ("killall pianobar")	# wisi wiec kilujemy
 		#if not(self.pianobar.isalive()):
 		#	pmessage = 'Network error'
 		log.message("radio.pandora_start Pianobar login message: " + pmessage, log.DEBUG)
