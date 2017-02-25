@@ -235,6 +235,10 @@ class MyDaemon(Daemon):
 				msg = '  ' + todaysdate  # extra 2 spaces before time (Pecus)
 				lcd.line2(msg)  # in sleep mode time and date in second line of LCD (Pecus)
 				display_sleep(lcd,radio)
+				if config.rss:	# RSS in standby only if on in config file (Pecus)
+					display_rss(lcd,rss)
+				else:
+					lcd.line3('')
 
 			# Timer function
 			checkTimer(radio)
@@ -299,23 +303,23 @@ def interrupt():
 		radio.setSwitch(0)
 
 	# Rapid display of track play status
-	if radio.getSource() == radio.PLAYER or radio.getSource() == radio.PANDORA:
-		if radio.volumeChanged():
+	if radio.getDisplayMode() != radio.MODE_SLEEP:
+		if radio.getSource() == radio.PLAYER or radio.getSource() == radio.PANDORA:
+			if radio.volumeChanged():
+				displayVolume(lcd,radio)
+				time.sleep(0.5)
+			else:
+				displayProgress(lcd,radio)
+		elif (radio.getTimer() and not interrupt) or radio.volumeChanged():
 			displayVolume(lcd,radio)
-			time.sleep(0.5)
-		else:
-			displayProgress(lcd,radio)
+			interrupt = checkTimer(radio)
 
-	elif (radio.getTimer() and not interrupt) or radio.volumeChanged():
-		displayVolume(lcd,radio)
-		interrupt = checkTimer(radio)
+		if not interrupt:
+			interrupt = checkState(radio) or radio.getInterrupt()
 
-	if not interrupt:
-		interrupt = checkState(radio) or radio.getInterrupt()
-
-	# sprawdzamy czy minal czas na potwierdzenie z Pandory i jesli tak to zerujemy flage potwierdzenia
-	if radio.pandora_decision_time <= int(time.time()):
-		radio.pandora_decision = radio.OK
+		# sprawdzamy czy minal czas na potwierdzenie z Pandory i jesli tak to zerujemy flage potwierdzenia
+		if radio.pandora_decision_time <= int(time.time()):
+			radio.pandora_decision = radio.OK
 
 	return interrupt
 
@@ -561,12 +565,6 @@ def display_sleep(lcd,radio):
 	if radio.alarmActive():
 		message = "Alarm " + radio.getAlarmTime()
 	lcd.line4(message)
-	if config.rss:	# RSS in standby only if on in config file (Pecus)
-		rss_line = rss.getFeed()  # (Pecus)
-		lcd.setScrollSpeed(0.2) # Scroll RSS a bit faster  # (Pecus)
-		lcd.scroll3(rss_line,interrupt)  # (Pecus)
-	else:			# (Pecus)
-		lcd.line3('')	# (Pecus)
 	return
 
 # Get the last ID stored in /var/lib/radiod
