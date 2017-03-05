@@ -47,9 +47,10 @@
 <div id="nadole">
 <div id="player">
 </div>
-<button id="VDOWNbutton">VOL-</button>
-<button id="VUPbutton">VOL+</button>
+<button id="VDOWNbutton">V-</button>
 <button id="MUTEbutton">MUTE</button>
+<button id="VUPbutton">V+</button>
+<button id="TIMERbutton">SLEEP TIMER</button>
 </div>
 <script>
  $("#OKbutton").click(function() {
@@ -99,6 +100,9 @@
  });
  $("#MUTEbutton").click(function() {
    $.post("button.php?key=KEY_MUTE");
+ });
+ $("#TIMERbutton").click(function() {
+   $.post("button.php?key=KEY_TIME");
  });
  $("#RADIObutton").click(function() {
    $.post("button.php?key=KEY_RADIO");
