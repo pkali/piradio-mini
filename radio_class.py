@@ -369,8 +369,6 @@ class Radio:
 					self.timerOff()
 				else:
 					self.timerOn()
-				self.setInterrupt()	# (Pecus)
-
 
 		# Handle left,right, up and down keys
 		else:
