@@ -161,6 +161,7 @@ def listener():
 	listener.register('KEY_RADIO',handleIRevent) # (Pecus)	
 	listener.register('KEY_MEDIA',handleIRevent) # (Pecus)	
 	listener.register('KEY_PANDORA',handleIRevent) # (Pecus)	
+	listener.register('KEY_TIME',handleIRevent) # (Pecus)	
 	log.message("Activating IR Remote Control listener", log.DEBUG)
 	listener.activate()
 

@@ -363,6 +363,14 @@ class Radio:
 			self.setDisplayMode(display_mode)            # (Pecus)
 			self.setInterrupt()                          # (Pecus)
 
+		elif key == 'KEY_TIME': # timer on/off (Pecus)
+			if self.display_mode != self.MODE_SLEEP:  # no in sleep mode! (Pecus)
+				if self.getTimer():
+					self.timerOff()
+				else:
+					self.timerOn()
+				self.setInterrupt()	# (Pecus)
+
 
 		# Handle left,right, up and down keys
 		else:
