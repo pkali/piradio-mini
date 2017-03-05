@@ -1,0 +1,121 @@
+# 
+# Interface Configuration file for PiFace CAD and piradio program
+# 
+
+begin
+  prog = piradio
+  button = KEY_VOLUMEUP
+  config = KEY_VOLUMEUP
+  repeat = 0
+end
+
+begin
+  prog = piradio
+  button = KEY_VOLUMEDOWN
+  config = KEY_VOLUMEDOWN
+  repeat = 0
+end
+
+begin
+  prog = piradio
+  button = KEY_CHANNELUP
+  config = KEY_CHANNELUP
+end
+
+begin
+  prog = piradio
+  button = KEY_CHANNELDOWN
+  config = KEY_CHANNELDOWN
+end
+
+begin
+  prog = piradio
+  button = KEY_MUTE
+  config = KEY_MUTE
+end
+
+begin
+  prog = piradio
+  button = KEY_MENU
+  config = KEY_MENU
+end
+
+begin
+  prog = piradio
+  button = KEY_LEFT
+  config = KEY_LEFT
+end
+
+begin
+  prog = piradio
+  button = KEY_RIGHT
+  config = KEY_RIGHT
+end
+
+begin
+  prog = piradio
+  button = KEY_UP
+  config = KEY_UP
+end
+
+begin
+  prog = piradio
+  button = KEY_DOWN
+  config = KEY_DOWN
+end
+
+begin
+  prog = piradio
+  button = KEY_OK
+  config = KEY_OK
+end
+
+begin
+  prog = piradio
+  button = KEY_LANGUAGE
+  config = KEY_LANGUAGE
+end
+
+begin
+  prog = piradio
+  button = KEY_INFO
+  config = KEY_INFO
+end
+
+begin
+  prog = piradio
+  button = KEY_SLEEP
+  config = KEY_SLEEP
+end
+
+begin
+  prog = piradio
+  button = KEY_WAKEUP
+  config = KEY_WAKEUP
+end
+
+begin
+  prog = piradio
+  button = KEY_MEDIA
+  config = KEY_MEDIA
+end
+
+begin
+  prog = piradio
+  button = KEY_RADIO
+  config = KEY_RADIO
+end
+
+begin
+  prog = piradio
+  button = KEY_PANDORA
+  config = KEY_PANDORA
+end
+
+begin
+  prog = piradio
+  button = KEY_TIME
+  config = KEY_TIME
+end
+
+# End
