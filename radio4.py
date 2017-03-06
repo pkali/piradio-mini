@@ -125,16 +125,25 @@ class MyDaemon(Daemon):
 		lcd.line1("Radio version " + radio.getVersion())
 		time.sleep(0.5)
 
-		ipaddr = exec_cmd('hostname -I')
-		hostname = exec_cmd('hostname -s')
-		log.message("IP " + ipaddr, log.INFO)
-
 		# Display daemon pid on the LCD
 		message = "Radio pid " + str(os.getpid())
 		lcd.line2(message)
 
-		lcd.line3("Starting MPD")
+		lcd.line3("Waiting for network")
+		IPwait = 5	# Wait max 5s. for network
+		while IPwait > 0:
+			IPwait = IPwait - 1
+			ipaddr = exec_cmd('hostname -I')
+			if ipaddr is "":
+				time.sleep(1)
+			else:
+				IPwait = 0
+
 		lcd.line4("IP " + ipaddr)
+		hostname = exec_cmd('hostname -s')
+		log.message("IP " + ipaddr, log.INFO)
+
+		lcd.line3("Starting MPD")
 		radio.start()
 		log.message("MPD started", log.INFO)
 		time.sleep(0.5)
