@@ -353,6 +353,8 @@ class Radio:
 				now = int(time.time())                       # (Pecus)
 				self.timeTimer = now - self.timerValue * 60  # (Pecus)
 				self.fireTimer()                             # (Pecus)
+				time.sleep(0.5)
+				self.setInterrupt()                          # (Pecus)
 				time.sleep(0.5)	# Zapobiega przewinieciu sie calego tytulu pandory na LCD przed wylaczeniem... dlaczego???
 				self.setInterrupt()                          # (Pecus)
 
