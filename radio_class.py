@@ -353,7 +353,7 @@ class Radio:
 				now = int(time.time())                       # (Pecus)
 				self.timeTimer = now - self.timerValue * 60  # (Pecus)
 				self.fireTimer()                             # (Pecus)
-				time.sleep(0.5)
+				time.sleep(0.5)	# Zapobiega przewinieciu sie calego tytulu pandory na LCD przed wylaczeniem... dlaczego???
 				self.setInterrupt()                          # (Pecus)
 				time.sleep(0.5)	# Zapobiega przewinieciu sie calego tytulu pandory na LCD przed wylaczeniem... dlaczego???
 				self.setInterrupt()                          # (Pecus)
@@ -1157,7 +1157,7 @@ class Radio:
 			if now > self.timeTimer + self.timerValue * 60:
 				fireTimer = True
 				# Store fired value
-				self.storeTimer(self.timerValue)
+				# self.storeTimer(self.timerValue)
 				self.timerOff()
 		return fireTimer
 
@@ -1532,7 +1532,6 @@ class Radio:
 		# If a reload has been issued return to TIME display
 		if self.getReload():
 			display_mode = self.MODE_TIME
-
 		elif self.search_index+1 != self.current_id: # zmiana kanalu radiowego lub utworu przez menu
 			self.current_id = self.search_index+1
 			self.play(self.current_id)
@@ -1549,6 +1548,9 @@ class Radio:
 		if self.optionChanged():
 			display_mode = self.MODE_TIME
 			self.optionChangedFalse()
+			# If new time of Timer is set - Save it
+			if self.timerValue != self.getStoredTimer():
+				self.storeTimer(self.timerValue)
 		
 		self.setDisplayMode(display_mode)
 		return
