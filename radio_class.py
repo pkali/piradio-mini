@@ -251,6 +251,7 @@ class Radio:
 		self.current_pandora_id = self.getStoredID(self.current_file)
 		self.current_file = CurrentStationFile
 		self.current_id = self.getStoredID(self.current_file)
+		self.search_index = self.current_id - 1
 		return
 
 	# Call back routine for the IR remote
