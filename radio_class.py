@@ -1548,9 +1548,10 @@ class Radio:
 		if self.optionChanged():
 			display_mode = self.MODE_TIME
 			self.optionChangedFalse()
-			# If new time of Timer is set - Save it
+			# If new time of Timer is set - Save it (only if longer than 4 minutes)
 			if self.timerValue != self.getStoredTimer():
-				self.storeTimer(self.timerValue)
+				if self.timerValue > 4:
+					self.storeTimer(self.timerValue)
 		
 		self.setDisplayMode(display_mode)
 		return
