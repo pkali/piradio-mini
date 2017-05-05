@@ -556,8 +556,7 @@ def display_current(lcd,radio,toggleScrolling):
 	if radio.streaming:
 		if radio.streammetadata != title:
 			radio.streammetadata = title
-			tempmetadata = radio.streammetadata.replace(" ","+") #add "+" instead of " " for icecast2
-			metadataFormatted = radio.tempmetadata.replace("&","and") #add "and" instead of "&" for icecast2
+			metadataFormatted = radio.streammetadata.replace(" ","+") #add "+" instead of " " for icecast2
 			requestToSend = ("http://localhost:8001/admin/metadata?mount=/mpd&mode=updinfo&song=") +(metadataFormatted)
 			r = requests.get((requestToSend), auth=("admin","mympd"))
 
