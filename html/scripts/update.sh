@@ -13,7 +13,7 @@ apt-get -y install darkice
 # Set up new audio config files
 cp /usr/share/radio/hardware/audio/asoundrc /home/pi/.asoundrc
 cp /usr/share/radio/hardware/audio/mpd.conf /etc/mpd.conf
-cp /usr/share/radio/hardware/audio/darkice.conf /etc/darkice.conf
+cp /usr/share/radio/hardware/audio/darkice.cfg /etc/darkice.cfg
 cp /usr/share/radio/hardware/audio/libao.conf /etc/libao.conf
 cp /usr/share/radio/hardware/audio/darkice /etc/init.d/darkice
 cp /usr/share/radio/hardware/audio/internal.conf /lib/modprobe.d/aliases.conf
