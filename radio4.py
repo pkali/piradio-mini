@@ -82,6 +82,7 @@ class MyDaemon(Daemon):
 
 	def run(self):
 		#global CurrentFile
+		radio.execCommand("modprobe snd-aloop")
 
 		GPIO.setmode(GPIO.BCM)       # Use BCM GPIO numbers
 		GPIO.setwarnings(False)      # Ignore warnings
