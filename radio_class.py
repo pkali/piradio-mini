@@ -168,6 +168,10 @@ class Radio:
 	pandora_station_name = ''
 	pandora_song_name = ''
 	pandora_progress = ''
+	
+	
+	# Metadata for icecast server
+	streammetadata = ''
 
 	# Clock and timer options
 	timer = False	  # Timer on
@@ -1387,6 +1391,7 @@ class Radio:
 		output_id = 2
 		self.streaming = True
 		self.execCommand("service icecast2 start")
+		self.execCommand("service darkice start")
 		self.execMpcCommand("enable " + str(output_id))
 		self.storeStreaming("on")
 		self.streamingStatus()
@@ -1397,9 +1402,11 @@ class Radio:
 		output_id = 2
 		self.streaming = False
 		self.execMpcCommand("disable " + str(output_id))
+		self.execCommand("service darkice stop")
 		self.execCommand("service icecast2 stop")
 		self.storeStreaming("off")
 		self.streamingStatus()
+		self.streammetadata = ''
 		return self.streaming
 
 	# Display streaming status
@@ -2661,7 +2668,7 @@ class Radio:
 		#self.speak(current)  # (Pecus)
 		#self.speak(name)  # (Pecus)
 		#self.speak(title)  # (Pecus)
-		self.speakAlways(time + ' . ' + current + '. ' + name + '. ' + title)  # says even id excluded speaking in config file (Pecus)
+		self.speakAlways(time + ' , ' + current + ', ' + name + ', ' + title)  # says even id excluded speaking in config file (Pecus)
 		return
 
 	# Is speech enabled

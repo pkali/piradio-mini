@@ -32,6 +32,7 @@ from time import strftime
 import shutil
 import atexit
 import traceback
+import requests
 
 # Class imports
 from radio_daemon import Daemon
@@ -52,6 +53,7 @@ DOWN = 1
 #CurrentTrackFile = "/var/lib/radiod/current_track"
 #CurrentFile = CurrentStationFile
 PlaylistsDirectory = "/var/lib/mpd/playlists/"
+
 
 log = Log()
 radio = Radio()
@@ -548,6 +550,14 @@ def display_current(lcd,radio,toggleScrolling):
 		playlist = radio.getPlayList()
 		current_artist = radio.getCurrentArtist()
 		lcd.line2(current_artist)
+
+	# Send metadata to icecast server
+	if radio.streaming:
+		if radio.streammetadata != title:
+			radio.streammetadata = title
+			metadataFormatted = radio.streammetadata.replace(" ","+") #add "+" instead of " " for icecast2
+			requestToSend = ("http://localhost:8001/admin/metadata?mount=/mpd&mode=updinfo&song=") +(metadataFormatted)
+			r = requests.get((requestToSend), auth=("admin","mympd"))
 
 	# Display stream error 
 	if radio.gotError():
