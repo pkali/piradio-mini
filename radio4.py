@@ -41,6 +41,7 @@ from lcd_class import Lcd
 from log_class import Log
 from rss_class import Rss
 from config_class import Configuration  # for configuration read (Pecus)
+from translate_class import Translate
 
 
 # To use GPIO 14 and 15 (Serial RX/TX)
@@ -60,6 +61,7 @@ radio = Radio()
 lcd = Lcd()
 rss = Rss()
 config = Configuration()	# for configuration read (Pecus)
+translate = Translate()
 
 # Signal SIGTERM handler
 def signalHandler(signal,frame):
@@ -565,6 +567,7 @@ def display_current(lcd,radio,toggleScrolling):
 			metadataFormatted = metadataFormatted.replace("&","%26")
 			metadataFormatted = metadataFormatted.replace("@","%40")
 			metadataFormatted = metadataFormatted.replace(" ","+") #add "+" instead of " " for icecast2
+			metadataFormatted = translate.toLCD(metadataFormatted)
 			requestToSend = ("http://localhost:8001/admin/metadata?mount=/mpd&mode=updinfo&song=") +(metadataFormatted)
 			r = requests.get((requestToSend), auth=("admin","mympd"))
 
