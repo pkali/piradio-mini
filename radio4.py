@@ -517,7 +517,8 @@ def display_current(lcd,radio,toggleScrolling):
 	title = radio.getCurrentTitle()
 	current_id = radio.getCurrentID()
 	source = radio.getSource()
-
+	streeamname = ''
+	
 	# Display progress of the currently playing track
 	if radio.muted():
 		displayVolume(lcd,radio)
@@ -528,7 +529,9 @@ def display_current(lcd,radio,toggleScrolling):
 			displayVolume(lcd,radio) 
 
 	if source == radio.RADIO:
+		streamname = '[' + station + '] - ' + title 
 		if len(title) < 1:
+			streamname = '[' + station + ']'
 			bitrate = radio.getBitRate()
 			if bitrate > 0:
 				title = "Station " + str(current_id) + ' ' + str(bitrate) +'k'
@@ -541,6 +544,7 @@ def display_current(lcd,radio,toggleScrolling):
 			else:
 				lcd.line2(station)
 	elif source == radio.PANDORA:
+		streamname = title
 		if toggleScrolling:
 			lcd.line3(title)
 			lcd.scroll2(station, interrupt)
@@ -551,12 +555,16 @@ def display_current(lcd,radio,toggleScrolling):
 		playlist = radio.getPlayList()
 		current_artist = radio.getCurrentArtist()
 		lcd.line2(current_artist)
+		streamname = current_artist + ' - ' + title
 
 	# Send metadata to icecast server
 	if radio.streaming:
-		if radio.streammetadata != title:
-			radio.streammetadata = title
-			metadataFormatted = radio.streammetadata.replace(" ","+") #add "+" instead of " " for icecast2
+		if radio.streammetadata != streamname:
+			radio.streammetadata = streamname
+			metadataFormatted = streamname.replace("%","%25")
+			metadataFormatted = metadataFormatted.replace("&","%26")
+			metadataFormatted = metadataFormatted.replace("@","%40")
+			metadataFormatted = metadataFormatted.replace(" ","+") #add "+" instead of " " for icecast2
 			requestToSend = ("http://localhost:8001/admin/metadata?mount=/mpd&mode=updinfo&song=") +(metadataFormatted)
 			r = requests.get((requestToSend), auth=("admin","mympd"))
 
