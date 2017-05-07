@@ -104,6 +104,15 @@ echo "</select>\r\n";
 <button type="submit" name="submit">Save Global PiRadio config</button>
 </pre>
 </form>
+<pre>
+<?php
+$local_version_date = filemtime("/usr/share/radio/README.md");
+$local_version = str_replace("\n","",file_get_contents( "/usr/share/radio/version" ));
+$github_version_date = filemtime("/usr/share/piradio-mini-master/README.md");
+$github_version = str_replace("\n","",file_get_contents( "/usr/share/piradio-mini-master/version" ));
+echo "Your PiRadio version: <b>".$local_version."</b>. Last commit: <b>".date("d.m.Y H:i:s",$local_version_date)."</b>.";
+?>
+</pre>
 <a href="hconfig.php"><button>Hardware Configuration & Update</button></a>
 <hr>
 Media network folder config
