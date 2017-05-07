@@ -30,7 +30,8 @@
 <button id="DOWNbutton">v</button>
 <div id="speak">
 <button id="LGbutton">LANGUAGE</button><br>
-<button id="INFObutton">INFO</button>
+<button id="INFObutton">INFO</button><br>
+<button id="STREAMTbutton">STREAM ON/OFF</button>
 </div>
 </div>
 <div id="lewebuttony">
@@ -121,6 +122,12 @@
    setTimeout(function(){
      $("#player").load("player.php");
    }, 5500);
+ });
+ $("#STREAMTbutton").click(function() {
+   $.post("button.php?key=STREAMING_TOGGLE");
+   setTimeout(function(){
+     $("#player").load("player.php");
+   }, 4000);
  });
 </script>
 </body>
