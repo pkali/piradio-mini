@@ -449,7 +449,6 @@ class Radio:
 		# Icecast Streaming settings
 		self.streaming = self.getStoredStreaming()
 		if self.streaming:
-			self.streaming = False
 			self.streamingOn()
 		else:
 			self.streamingOff()
@@ -1401,27 +1400,26 @@ class Radio:
 
 	# Switch on Icecast2 streaming
 	def streamingOn(self):
-		if not self.streaming:
-			output_id = 2
-			self.streaming = True
-			self.execCommand("service icecast2 start")
-			self.execCommand("service darkice start")
-			self.execMpcCommand("enable " + str(output_id))
-			self.storeStreaming("on")
-			self.streamingStatus()
+		output_id = 2
+		self.streaming = True
+		self.execCommand("service icecast2 start")
+		self.execCommand("service darkice start")
+		self.execMpcCommand("enable " + str(output_id))
+		self.storeStreaming("on")
+		self.streamingStatus()
+		self.streammetadata = ''
 		return self.streaming
 
 	# Switch off Icecast2 streaming
 	def streamingOff(self):
-		if self.streaming:
-			output_id = 2
-			self.streaming = False
-			self.execMpcCommand("disable " + str(output_id))
-			self.execCommand("service darkice stop")
-			self.execCommand("service icecast2 stop")
-			self.storeStreaming("off")
-			self.streamingStatus()
-			self.streammetadata = ''
+		output_id = 2
+		self.streaming = False
+		self.execMpcCommand("disable " + str(output_id))
+		self.execCommand("service darkice stop")
+		self.execCommand("service icecast2 stop")
+		self.storeStreaming("off")
+		self.streamingStatus()
+		self.streammetadata = ''
 		return self.streaming
 
 	# Display streaming status
