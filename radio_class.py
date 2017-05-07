@@ -326,6 +326,18 @@ class Radio:
 			self.loadStations()
 			self.setInterrupt()
 
+		elif key == 'STREAMING_TOGGLE':
+			self.toggleStreaming()
+			self.setInterrupt()
+
+		elif key == 'STREAMING_ON':
+			self.streamingOn()
+			self.setInterrupt()
+
+		elif key == 'STREAMING_OFF':
+			self.streamingOff()
+			self.setInterrupt()
+
 		elif key == 'KEY_MEDIA': # and remote dedicated button (Pecus)
 			if self.display_mode != self.MODE_SLEEP:  # no in sleep mode! (Pecus)
 				self.setPlayerSource()	# (Pecus)
@@ -1388,25 +1400,27 @@ class Radio:
 
 	# Switch on Icecast2 streaming
 	def streamingOn(self):
-		output_id = 2
-		self.streaming = True
-		self.execCommand("service icecast2 start")
-		self.execCommand("service darkice start")
-		self.execMpcCommand("enable " + str(output_id))
-		self.storeStreaming("on")
-		self.streamingStatus()
+		if not self.streaming:
+			output_id = 2
+			self.streaming = True
+			self.execCommand("service icecast2 start")
+			self.execCommand("service darkice start")
+			self.execMpcCommand("enable " + str(output_id))
+			self.storeStreaming("on")
+			self.streamingStatus()
 		return self.streaming
 
 	# Switch off Icecast2 streaming
 	def streamingOff(self):
-		output_id = 2
-		self.streaming = False
-		self.execMpcCommand("disable " + str(output_id))
-		self.execCommand("service darkice stop")
-		self.execCommand("service icecast2 stop")
-		self.storeStreaming("off")
-		self.streamingStatus()
-		self.streammetadata = ''
+		if self.streaming:
+			output_id = 2
+			self.streaming = False
+			self.execMpcCommand("disable " + str(output_id))
+			self.execCommand("service darkice stop")
+			self.execCommand("service icecast2 stop")
+			self.storeStreaming("off")
+			self.streamingStatus()
+			self.streammetadata = ''
 		return self.streaming
 
 	# Display streaming status
