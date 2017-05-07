@@ -449,6 +449,7 @@ class Radio:
 		# Icecast Streaming settings
 		self.streaming = self.getStoredStreaming()
 		if self.streaming:
+			self.streaming = False
 			self.streamingOn()
 		else:
 			self.streamingOff()

@@ -568,8 +568,13 @@ def display_current(lcd,radio,toggleScrolling):
 			metadataFormatted = metadataFormatted.replace("&","%26")
 			metadataFormatted = metadataFormatted.replace("@","%40")
 			metadataFormatted = metadataFormatted.replace(" ","+") #add "+" instead of " " for icecast2
-			requestToSend = ("http://localhost:8001/admin/metadata?mount=/mpd&mode=updinfo&song=") +(metadataFormatted)
-			r = requests.get((requestToSend), auth=("admin","mympd"))
+			# metadataFormatted = "Test+characters+x"
+			try:
+				requestToSend = ("http://localhost:8001/admin/metadata?mount=/mpd&mode=updinfo&song=") +(metadataFormatted)
+				r = requests.get((requestToSend), auth=("admin","mympd"))
+			except:
+				log.message("Send metadata do icacast server problem - metadata: " + metadataFormatted, log.ERROR)
+
 
 	# Display stream error 
 	if radio.gotError():
