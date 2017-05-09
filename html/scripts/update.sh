@@ -4,6 +4,8 @@ cp --preserve=timestamp -R /usr/share/radio/hardware/ir/lircrc /etc/lirc/
 # Set up loopback audio module
 modprobe -f snd-aloop
 
+apt-get update
+
 # Install darkice for encoding said audio stream into mp3
 apt-get -y install darkice
 
