@@ -159,7 +159,7 @@ class MyDaemon(Daemon):
 		mpd_version = radio.execMpcCommand("version")
 		log.message(mpd_version, log.INFO)
 		lcd.line3(mpd_version)
-		lcd.line4("GPIO version " + str(GPIO.VERSION))
+		lcd.line4("GPIO: " + str(GPIO.VERSION) + " cores:"+str(radio.cores))
 		time.sleep(2.0)
 		 	
 		reload(lcd,radio)

@@ -116,6 +116,7 @@ class Radio:
 
 	version = "0.0"
 	boardrevision = 2 # Raspberry board version type
+	cores = 0 # number of processor cores
 	udphost = 'localhost'  # Remote IR listener UDP Host
 	udpport = 5100  # Remote IR listener UDP port number
 	mpdport = 6600  # MPD port number
@@ -405,6 +406,7 @@ class Radio:
 		config.display()
 		# Get Configuration parameters /etc/radiod.conf
 		self.boardrevision = self.getBoardRevision()
+		self.cores = self.getCores()
 		self.mpdport = config.getMpdPort()
 		self.udpport = config.getRemoteUdpPort()
 		self.udphost = config.getRemoteListenHost()
@@ -436,6 +438,7 @@ class Radio:
 		log.message("radio.start current ID " + str(self.current_id), log.DEBUG)
 		self.volume = self.getStoredVolume()
 		self.setVolume(self.volume)
+		self.execCommand ("killall pianobar")	# Necessary after restart problems
 
 		# Alarm and timer settings
 		self.timeTimer = int(time.time())
@@ -841,6 +844,12 @@ class Radio:
 		self.boardrevision = revision
 		log.message("Board revision " + str(self.boardrevision), log.INFO)
 		return self.boardrevision
+
+	# Get number of processor cores from /proc/cpuinfo
+	def getCores(self):
+		cores_text = self.execCommand("cat /proc/cpuinfo | grep -c processor")
+		self.cores = int(cores_text)
+		return self.cores
 
 	# Get the MPD port number
 	def getMpdPort(self):
@@ -1400,13 +1409,17 @@ class Radio:
 
 	# Switch on Icecast2 streaming
 	def streamingOn(self):
-		output_id = 2
-		self.streaming = True
-		self.execCommand("service icecast2 start")
-		self.execCommand("service darkice start")
-		self.execMpcCommand("enable " + str(output_id))
-		self.storeStreaming("on")
-		self.streamingStatus()
+		if self.streamingAvailable():
+			output_id = 2
+			self.streaming = True
+			self.execCommand("service icecast2 start")
+			self.execCommand("service darkice start")
+			self.execMpcCommand("enable " + str(output_id))
+			self.storeStreaming("on")
+			self.streamingStatus()
+		else:
+			self.streaming = False
+			self.storeStreaming("off")
 		self.streammetadata = ''
 		return self.streaming
 
@@ -1430,10 +1443,10 @@ class Radio:
 		log.message(status, log.INFO)
 		return
 
-	# Check if icecast streaming installed
+	# Check if icecast streaming installed and pocessor has more than 1 core
 	def streamingAvailable(self):
 		fpath = "/usr/bin/icecast2"
-		return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+		return os.path.isfile(fpath) and os.access(fpath, os.X_OK) and (self.cores>1)
 
 	# Store stram on or off in streaming file
 	def storeStreaming(self,onoff):
