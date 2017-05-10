@@ -328,16 +328,19 @@ class Radio:
 			self.setInterrupt()
 
 		elif key == 'STREAMING_TOGGLE':
-			self.toggleStreaming()
-			self.setInterrupt()
+			if self.display_mode != self.MODE_SLEEP:  # no in sleep mode! (Pecus)
+				self.toggleStreaming()
+				self.setInterrupt()
 
 		elif key == 'STREAMING_ON':
-			self.streamingOn()
-			self.setInterrupt()
+			if self.display_mode != self.MODE_SLEEP:  # no in sleep mode! (Pecus)
+				self.streamingOn()
+				self.setInterrupt()
 
 		elif key == 'STREAMING_OFF':
-			self.streamingOff()
-			self.setInterrupt()
+			if self.display_mode != self.MODE_SLEEP:  # no in sleep mode! (Pecus)
+				self.streamingOff()
+				self.setInterrupt()
 
 		elif key == 'KEY_MEDIA': # and remote dedicated button (Pecus)
 			if self.display_mode != self.MODE_SLEEP:  # no in sleep mode! (Pecus)
@@ -382,6 +385,7 @@ class Radio:
 			display_mode = self.MODE_TIME                # (Pecus)
 			self.setDisplayMode(display_mode)            # (Pecus)
 			self.setInterrupt()                          # (Pecus)
+			self.streamingWakeup()
 
 		elif key == 'KEY_TIME': # timer on/off (Pecus)
 			if self.display_mode != self.MODE_SLEEP:  # no in sleep mode! (Pecus)
@@ -1423,6 +1427,29 @@ class Radio:
 		self.streammetadata = ''
 		return self.streaming
 
+	# Sleep Icecast2 streaming
+	def streamingSleep(self):
+		if self.streamingStat():
+			output_id = 2
+			self.execMpcCommand("disable " + str(output_id))
+			self.execCommand("service darkice stop")
+			self.execCommand("service icecast2 stop")
+		self.streamingStatus()
+		self.streammetadata = ''
+		return self.streaming
+
+	# Wakeup Icecast2 streaming
+	def streamingWakeup(self):
+		if self.streaming and not self.streamingStat():
+			if self.streamingAvailable():
+				output_id = 2
+				self.execCommand("service icecast2 start")
+				self.execCommand("service darkice start")
+				self.execMpcCommand("enable " + str(output_id))
+				self.streamingStatus()
+		self.streammetadata = ''
+		return self.streaming
+
 	# Switch off Icecast2 streaming
 	def streamingOff(self):
 		output_id = 2
@@ -1435,11 +1462,19 @@ class Radio:
 		self.streammetadata = ''
 		return self.streaming
 
-	# Display streaming status
-	def streamingStatus(self):
-		status = self.execCommand("mpc outputs | grep -i stream")
+	# Check streaming status
+	def streamingStat(self):
+		status = self.execCommand("mpc outputs | grep -i 2\.*\enabled")
+		stat = True
 		if len(status)<1:
-			status = "No Icecast streaming"
+			stat = False
+		return stat
+
+	# Log streaming status
+	def streamingStatus(self):
+		status = "No Icecast streaming"
+		if self.streamingStat():
+			status = "Icecast streaming enabled"
 		log.message(status, log.INFO)
 		return
 

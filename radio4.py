@@ -266,7 +266,7 @@ class MyDaemon(Daemon):
 				radio.unmute()
 				displayWakeUpMessage(lcd)
 				radio.setDisplayMode(radio.MODE_TIME)
-					
+				radio.streamingWakeup()
 
 			# Toggle line 2 & 3 scrolling
 			if toggleScrolling:
@@ -845,6 +845,7 @@ def checkTimer(radio):
 		if radio.getSource() == radio.PANDORA:	# Jesli gra pandora to nie pauzujemy (mutujemy) tylko stopujemy
 			radio.pandora_stop()
 		radio.setDisplayMode(radio.MODE_SLEEP)
+		radio.streamingSleep()
 		interrupt = True
 	return interrupt
 
