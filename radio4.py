@@ -215,6 +215,9 @@ class MyDaemon(Daemon):
 					msg = "m"
 				elif input_source == radio.PANDORA:
 					msg = "p"
+					# sprawdzamy czy minal czas na potwierdzenie z Pandory i jesli tak to zerujemy flage potwierdzenia
+					if radio.pandora_watchdog_time <= int(time.time()):
+						radio.setReload(True)
 				msg = msg + ' ' + todaysdate  # extra space before time (Pecus)
 				if radio.getStreaming():
 					msg = msg + ' *' 

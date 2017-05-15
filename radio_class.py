@@ -114,6 +114,9 @@ class Radio:
 	ONEDAYSECS = 86400	# Day in seconds
 	ONEDAYMINS = 1440	# Day in minutes
 
+	DECISION_SEC = 3  # 3 sekundy na potwierdzenie OK (pandora)
+	WATCHDOG_SEC = 6  # 6 sekund na info z pandory
+
 	version = "0.0"
 	boardrevision = 2 # Raspberry board version type
 	cores = 0 # number of processor cores
@@ -132,6 +135,7 @@ class Radio:
 	pandora_stationIDs = ['']
 	pandora_decision = OK	# jesli nie OK to zostal wcisniety kursor i czekamy na potwierdzenie decyzji (+, -, ban) przyciskiem OK, w czasie oczekiwania na potwierdzenie zmienna przyjmuje wartosc kierunku kursora
 	pandora_decision_time = 0 # czas (godzina z zegara) po ktorym uplywa czekanie na decyzje
+	pandora_watchdog_time = 0 # czas (godzina z zegara) o ktorej ostatnio przyszlo info z pandory
 	source = RADIO	# Source RADIO or Player
 	reload = False	# Reload radio stations or player playlists
 	artist = ""	# Artist (Search routines)
@@ -511,17 +515,17 @@ class Radio:
 					self.pandora_decision = self.OK
 				elif key == 'KEY_UP':
 					self.pandora_decision = self.UP
-					self.pandora_decision_time = int(time.time()) + 3 # 3 sekundy na potwierdzenie OK
+					self.pandora_decision_time = int(time.time()) + self.DECISION_SEC
 					# kursor w gore - lubie
 					# ale czekamy sekunde na potwierdzenie OK
 					# no i tu trzeba cos wykombinowac :)
 					pass
 				elif key == 'KEY_DOWN':
 					self.pandora_decision = self.DOWN
-					self.pandora_decision_time = int(time.time()) + 3 # 3 sekundy na potwierdzenie OK
+					self.pandora_decision_time = int(time.time()) + self.DECISION_SEC
 				elif key == 'KEY_LEFT':
 					self.pandora_decision = self.LEFT
-					self.pandora_decision_time = int(time.time()) + 3 # 3 sekundy na potwierdzenie OK
+					self.pandora_decision_time = int(time.time()) + self.DECISION_SEC
 
 
 		else:
@@ -1624,6 +1628,7 @@ class Radio:
 					self.storeTimer(self.timerValue)
 		
 		self.setDisplayMode(display_mode)
+		self.pandora_watchdog_time = int(time.time()) + self.WATCHDOG_SEC
 		return
 
 	# Set any option you like here 
@@ -1699,6 +1704,7 @@ class Radio:
 			self.pandora_song_name = '---------------------'
 			log.message("radio.getPandoraStations error - no station list from pianobar", log.ERROR)
 		self.max_pandora_id = len(names)
+		self.pandora_watchdog_time = int(time.time()) + self.WATCHDOG_SEC
 		return names, ids
 
 	# Pobranie co tam wyswietla aktualnie pianobar
@@ -1744,6 +1750,7 @@ class Radio:
 						x = self.pianobar.expect(['\r', pexpect.TIMEOUT], timeout=1)
 						if x == 0:
 							self.pandora_progress = self.pianobar.before
+							self.pandora_watchdog_time = int(time.time()) + self.WATCHDOG_SEC
 					if x == 4:
 						# 'Error:' - gramy dalej cisze i zamiast nazwy stacji dajemy komunikat o bledzie
 						x = self.pianobar.expect(['\r\n', pexpect.TIMEOUT], timeout=0)
@@ -2353,6 +2360,7 @@ class Radio:
 		# stacji itp. I program glupieje
 		self.execCommand ("rm /home/pi/.config/pianobar/state")
 		log.message("radio.pandora_start", log.DEBUG)
+		self.pandora_watchdog_time = int(time.time()) + self.WATCHDOG_SEC + 30 # + 30 dodatkowe na ewentualny czas startu
 		#self.pandora_stop()	# dla pewnosci
 		self.pandora_decision = self.OK
 		log.message("radio.pandora_start Spawning pianobar...", log.DEBUG)
@@ -2399,6 +2407,7 @@ class Radio:
 			self.pandora_station_name = '** ' + pmessage + ' **'
 			self.pandora_song_name = '---------------------'
 			self.isPandoraPaused = True
+		self.pandora_watchdog_time = int(time.time()) + self.WATCHDOG_SEC
 		return
 		
 	#Load Pandora
