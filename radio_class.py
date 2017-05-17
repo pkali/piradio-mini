@@ -855,7 +855,7 @@ class Radio:
 
 	# Get number of processor cores from /proc/cpuinfo
 	def getCores(self):
-		cores_text = self.execCommand("cat /proc/cpuinfo | grep -c processor")
+		cores_text = self.execCommand("cat /proc/cpuinfo | grep -c 'processor[[:blank:]]:'")
 		self.cores = int(cores_text)
 		return self.cores
 
