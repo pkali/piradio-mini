@@ -156,7 +156,8 @@ class MyDaemon(Daemon):
 		if config.bright:	# LCD brightnes to high only if on in config file (Pecus)
 			lcd.setBright(True)  # LCD backlight brightness to high (Pecus)
 
-		mpd_version = radio.execMpcCommand("version")
+		#mpd_version = radio.execMpcCommand("version")
+		mpd_version = 'mpd version: ' + exec_cmd('mpd -V | grep Daemon | cut -c21-')
 		log.message(mpd_version, log.INFO)
 		lcd.line3(mpd_version)
 		lcd.line4("GPIO: " + str(GPIO.VERSION) + " cores:"+str(radio.cores))
