@@ -42,6 +42,7 @@ from log_class import Log
 from rss_class import Rss
 from config_class import Configuration  # for configuration read (Pecus)
 from translate_class import Translate
+from display_model import ModelInfo
 
 
 # To use GPIO 14 and 15 (Serial RX/TX)
@@ -62,6 +63,7 @@ lcd = Lcd()
 rss = Rss()
 config = Configuration()	# for configuration read (Pecus)
 translate = Translate()
+ModelInfo = ModelInfo()
 
 # Signal SIGTERM handler
 def signalHandler(signal,frame):
@@ -321,7 +323,7 @@ def interrupt():
 		radio.setSwitch(0)
 
 	# Rapid display of track play status
-	if radio.getDisplayMode() != radio.MODE_SLEEP:
+	if radio.getDisplayMode() != radio.MODE_SLEEP and radio.getDisplayMode() != radio.MODE_IP:
 		if radio.getSource() == radio.PLAYER or radio.getSource() == radio.PANDORA:
 			if radio.volumeChanged():
 				displayVolume(lcd,radio)
@@ -338,7 +340,8 @@ def interrupt():
 		# sprawdzamy czy minal czas na potwierdzenie z Pandory i jesli tak to zerujemy flage potwierdzenia
 		if radio.pandora_decision_time <= int(time.time()):
 			radio.pandora_decision = radio.OK
-
+	if radio.getDisplayMode() == radio.MODE_IP and not interrupt:	# ten manewr umozliwia przerwanie przewijania RSSa i przejscie do ekranu info bez czekania
+		interrupt = checkState(radio) or radio.getInterrupt()
 	return interrupt
 
 def no_interrupt(): 
@@ -827,11 +830,11 @@ def displayShutdown(lcd):
 def displayInfo(lcd,ipaddr,mpd_version):
 	lcd.line2("Radio version " + radio.getVersion())
 	lcd.line3(mpd_version)
-	lcd.line4("GPIO version " + GPIO.VERSION)
 	if ipaddr is "":
-		lcd.line3("No IP network")
+		lcd.line4("No IP network")
 	else:
-		lcd.scroll1("IP "+ ipaddr,interrupt)
+		lcd.line4("IP "+ ipaddr)
+	lcd.scroll1("Raspberry PI Model " + ModelInfo.model + " rev." + ModelInfo.revision + " (" + str(ModelInfo.ram_mb) + "MB RAM, cores:" + str(radio.cores) + ") manufactured by " + ModelInfo.maker + ". GPIO version " + GPIO.VERSION,interrupt)
 	return
 
 def VolumeToDisplay(volume):
