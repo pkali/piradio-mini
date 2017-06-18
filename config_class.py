@@ -69,6 +69,7 @@ class Configuration:
 	bright = True	# LCD high brightness (Pecus)
 	media_update = False	# always update media library (Pecus)
 	pandora_available = False	# is Pandora accout available ? (Pecus)
+	force_streaming = False	# If True, streaming is possible even on weak raspberries (1 core)
 
 	# Colours for Adafruit LCD
 	color = { 'OFF': 0x0, 'RED' : 0x1, 'GREEN' : 0x2, 'YELLOW' : 0x3,
@@ -280,6 +281,12 @@ class Configuration:
 					else:		# (Pecus)
 						self.pandora_available = False	# (Pecus)
 
+				elif option == 'force_streaming':		# option for streaming availablity on 1 core raspberries (Pecus)
+					if parameter == 'yes':	# (Pecus)
+						self.force_streaming = True		# (Pecus)
+					else:		# (Pecus)
+						self.force_streaming = False	# (Pecus)
+
 
 				else:
 					msg = "Invalid option " + option + ' in section ' \
@@ -459,6 +466,10 @@ class Configuration:
 	def getPandoraAvailable(self):        # (Pecus)
 		return self.pandora_available  # (Pecus)
 
+		# Get streaming flag (Pecus)
+	def getForceStreaming(self):        # (Pecus)
+		return self.force_streaming  # (Pecus)
+
 	# Get speech volume % of normal volume level
 	def getSpeechVolume(self):
 		return self.speech_volume
@@ -529,6 +540,7 @@ if __name__ == '__main__':
 	print "LCD high brightness:", config.getBright()  # (Pecus)
 	print "Always update media library:", config.getAlwaysUpdate()  # (Pecus)
 	print "Pandora account available:", config.getPandoraAvailable()  # (Pecus)
+	print "Streaming on 1 core raspberries:",config.getForceStreaming()	# (Pecus)
 	if config.getStationNamesSource() is 1:
 		sSource = "STREAM"
 	else: 

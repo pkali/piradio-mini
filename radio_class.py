@@ -1485,7 +1485,7 @@ class Radio:
 	# Check if icecast streaming installed and pocessor has more than 1 core
 	def streamingAvailable(self):
 		fpath = "/usr/bin/icecast2"
-		return os.path.isfile(fpath) and os.access(fpath, os.X_OK) and (self.cores>1)
+		return os.path.isfile(fpath) and os.access(fpath, os.X_OK) and ((self.cores>1) or config.getForceStreaming())
 
 	# Store stram on or off in streaming file
 	def storeStreaming(self,onoff):
