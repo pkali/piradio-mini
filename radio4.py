@@ -201,7 +201,7 @@ class MyDaemon(Daemon):
 					time.sleep(1)
 
 			elif ipaddr is "":
-				lcd.line3("No IP network")
+				lcd.line3("   No IP network!")
 
 			elif display_mode == radio.MODE_TIME:
 				if config.bright:	# LCD brightnes to high only if on in config file (Pecus)
@@ -831,7 +831,7 @@ def displayInfo(lcd,ipaddr,mpd_version):
 	lcd.line2("Radio version " + radio.getVersion())
 	lcd.line3(mpd_version)
 	if ipaddr is "":
-		lcd.line4("No IP network")
+		lcd.line4("   No IP network!")
 	else:
 		lcd.line4("IP "+ ipaddr)
 	lcd.scroll1("Raspberry PI Model " + ModelInfo.model + " rev." + ModelInfo.revision + " (" + str(ModelInfo.ram_mb) + "MB RAM, cores:" + str(radio.cores) + ") manufactured by " + ModelInfo.maker + ". GPIO version " + GPIO.VERSION,interrupt)
