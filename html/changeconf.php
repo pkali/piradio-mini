@@ -33,6 +33,16 @@ if (isset($msg)) {
 		echo "  window.location.href = 'index.html';\r\n";
 		echo "}, 30000);\r\n";
 		echo "</script>\r\n";
+	} elseif ($msg == "clear_caches") {
+		$end = shell_exec('sudo ./scripts/clear_caches.sh');
+		echo "Clear logs and caches.<br>\r\n";
+		echo "Wait!<br>\r\n";
+		echo "<script>\r\n";
+		echo "// redirect to main after 5 seconds\r\n";
+		echo "window.setTimeout(function() {\r\n";
+		echo "  window.location.href = 'index.html';\r\n";
+		echo "}, 5000);\r\n";
+		echo "</script>\r\n";
 	} elseif ($msg == "audio") {
 		$selected = $_POST['output'];
 		$hda = $_POST['hda'];

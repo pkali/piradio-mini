@@ -91,6 +91,9 @@ for ($i = 0; $i < count($remoteconfigs); $i++) {
 Update to last build from github
 <a href="update.php"><button>PiRadio update</button></a>
 <hr>
+Maintenance<br>
+<a href="changeconf.php?file=clear_caches"><button>Clear logs and caches</button></a>
+<hr>
 <a href="changeconf.php?file=restart"><button>PiRadio restart</button></a>
 <a href="changeconf.php?file=reboot"><button>System reboot</button></a>
 </body>
