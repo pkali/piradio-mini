@@ -88,11 +88,39 @@ for ($i = 0; $i < count($remoteconfigs); $i++) {
 </pre></b>
 </form>
 <hr>
-Update to last build from github
+Update to last build from github<br>
+<b><pre>
+<?php
+$local_version_date = filemtime("/usr/share/radio/README.md");
+$local_version = str_replace("\n","",file_get_contents( "/usr/share/radio/version" ));
+$github_version_date = filemtime("/usr/share/piradio-mini-master/README.md");
+$github_version = str_replace("\n","",file_get_contents( "/usr/share/piradio-mini-master/version" ));
+echo "Your PiRadio version: <b>".$local_version."</b>. Last commit: <b>".date("d.m.Y H:i:s",$local_version_date)."</b>.";
+?>
+<br>
 <a href="update.php"><button>PiRadio update</button></a>
+</pre></b>
 <hr>
 Maintenance<br>
-<a href="changeconf.php?file=clear_caches"><button>Clear logs and caches</button></a>
+<b><pre>
+<?php
+$end = shell_exec("df | grep '/dev/root'");
+$end = preg_replace('/\s+/', ' ', $end);
+$end=trim($end);
+$values = explode(" ", $end);
+$system_capacity = floatval($values[1]);
+$system_free = floatval($values[3]);
+$system_capacity = $system_capacity/1024;
+$system_free = $system_free/1028;
+echo "PiRadio SD card size: ".round($system_capacity,2)." MB.<br>";
+echo "free: ".round($system_free,2)." MB (".$values[4]." used)<br>";
+?>
+<br><a href="changeconf.php?file=clear_caches"><button>Clear logs and caches</button></a><br>
+<?php
+$end = shell_exec("uname -a");
+echo $end."<br>";
+?>
+<form action="changeconf.php?file=rpi_update" method="post"><button type="submit" name="submit" value="confirm">Raspberry Pi update</button></form></pre></b>
 <hr>
 <a href="changeconf.php?file=restart"><button>PiRadio restart</button></a>
 <a href="changeconf.php?file=reboot"><button>System reboot</button></a>

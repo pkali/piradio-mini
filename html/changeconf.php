@@ -38,10 +38,10 @@ if (isset($msg)) {
 		echo "Clear logs and caches.<br>\r\n";
 		echo "Wait!<br>\r\n";
 		echo "<script>\r\n";
-		echo "// redirect to main after 5 seconds\r\n";
+		echo "// redirect to main after 1 second\r\n";
 		echo "window.setTimeout(function() {\r\n";
 		echo "  window.location.href = 'index.html';\r\n";
-		echo "}, 5000);\r\n";
+		echo "}, 1000);\r\n";
 		echo "</script>\r\n";
 	} elseif ($msg == "audio") {
 		$selected = $_POST['output'];
@@ -171,7 +171,7 @@ if (isset($msg)) {
 			file_put_contents('/var/lib/radiod/stationlist_new', $stations);
 			chmod("/var/lib/radiod/stationlist_new", 0755);
 			echo "\r\n";
-			echo '<form action="changeconf.php?file=stations" method="post">';
+			echo "<form action='changeconf.php?file=".$msg."' method='post'>";
 			echo "\r\n";
 			echo '<button type="submit" name="submit" value="ok">Confirm new list</button>';
 			echo "\r\n";
@@ -188,7 +188,7 @@ if (isset($msg)) {
 				file_put_contents('/var/lib/radiod/stationlist_new', $stations);
 				chmod("/var/lib/radiod/stationlist_new", 0755);
 				echo "\r\n";
-				echo '<form action="changeconf.php?file=stations" method="post">';
+				echo "<form action='changeconf.php?file=".$msg."' method='post'>";
 				echo "\r\n";
 				echo '<button type="submit" name="submit" value="ok">Restore this list</button>';
 				echo "\r\n";
@@ -237,13 +237,12 @@ if (isset($msg)) {
 					$share_string = 'mount.cifs -o user="'.$login.'",password="'.$password.'",ro "'.$media_link.'" /share';
 				}
 			}
-			echo $end;
 			echo "New network media folder configuration.\r\n";
 			echo "<pre>Network path: <b>".$media_link."</b>\r\n";
 			echo "Login: <b>".$login."</b>\r\n";
 			echo "Password: <b>".$password."</b>\r\n";
 			echo "Shell command: <b>".$share_string."</b></pre>\r\n";
-			echo '<form action="changeconf.php?file=network" method="post">';
+			echo "<form action='changeconf.php?file=".$msg."' method='post'>";
 			echo "\r\n";
 			echo "<input type='hidden' name='share_string' value='".$share_string."'><br>\r\n";
 			echo "<button type='submit' name='submit' value='ok'>Confirm network folder config</button>";
@@ -358,6 +357,43 @@ if (isset($msg)) {
 		echo "Proxy: ".$pandora_array['control_proxy']."</b><br>";
 		file_put_contents('/home/pi/.config/pianobar/config', $pandora_new);
 		chmod("/home/pi/.config/pianobar/config", 0755);
+	} elseif ($msg == "rpi_update") {
+		$option = $_POST['submit'];
+		if ($option == "confirm") {
+			echo "Raspberry Pi update.\r\n";
+			echo "<pre><b>Warning!<br>";
+			echo "This is Raspberry Pi system update.<br>";
+			echo "The update procedure may take more than 10 minutes.<br>";
+			echo "Do not turn off the PiRadio until a full restart.<br><br>";
+			echo "If you want to track the process, cancel update now.<br>";
+			echo "Login to your Raspberry pi via ssh and run command:<br><br>";
+			echo "<i>sudo apt-get update && sudo apt-get -y dist-upgrade</i><br><br></b></pre>";
+			echo "<form action='changeconf.php?file=".$msg."' method='post'>";
+			echo "\r\n";
+			echo "<input type='hidden' name='share_string' value='".$share_string."'><br>\r\n";
+			echo "<button type='submit' name='submit' value='no'>Cancel Raspberry Pi update</button>";
+			echo "\r\n";
+			echo "<button type='submit' name='submit' value='ok'>Update</button>";
+			echo "\r\n";
+		} elseif ($option == "ok") {
+			echo "<b>Raspberry Pi update.</b><br>\r\n";
+			echo "Wait!<br>\r\n";
+			$end = shell_exec('sudo ./scripts/rpi_system_update.sh');
+			echo "<script>\r\n";
+			echo "// redirect to main after 120 seconds\r\n";
+			echo "window.setTimeout(function() {\r\n";
+			echo "  window.location.href = 'index.html';\r\n";
+			echo "}, 120000);\r\n";
+			echo "</script>\r\n";
+		} elseif ($option == "no") {
+			echo "<b>Raspberry Pi update canceled.</b>\r\n";
+			echo "<script>\r\n";
+			echo "// redirect to main after 2 seconds\r\n";
+			echo "window.setTimeout(function() {\r\n";
+			echo "  window.location.href = 'index.html';\r\n";
+			echo "}, 2000);\r\n";
+			echo "</script>\r\n";
+		}
 	}
 }
 ?>
