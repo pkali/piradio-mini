@@ -8,5 +8,5 @@ service radiod stop
 apt-get update
 
 # update all installed system packages and reboot
-apt-get -y upgrade
+apt-get -y dist-upgrade
 reboot

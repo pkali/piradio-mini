@@ -6,7 +6,7 @@ rm /var/backups/*.gz
 
 # Remove caches
 rm /var/cache/debconf/*.dat-old
-rm /var/cache/apt/archives/*.*
+apt-get clean
 
 # Remove old logs
 rm /var/log/*.gz
