@@ -101,7 +101,7 @@ if ( $piradio_array['startup'] == 'PANDORA' ) {
 echo "Pandora radio</option>\r\n";
 echo "</select>\r\n";
 ?>
-<button type="submit" name="submit">Save Global PiRadio config</button>
+<button type="submit" name="submit">Apply Global PiRadio config</button>
 </pre>
 </form>
 <pre>
@@ -114,6 +114,8 @@ echo "Your PiRadio version: <b>".$local_version."</b>. Last commit: <b>".date("d
 ?>
 </pre>
 <a href="hconfig.php"><button>Hardware Configuration & Update</button></a>
+<hr>
+<a href="sconfig.php"><button>Backup & Restore Configuration</button></a>
 <hr>
 Media network folder config
 <form action="changeconf.php?file=network" method="post">
