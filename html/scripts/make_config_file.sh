@@ -4,6 +4,9 @@
 rm -r /tmp/radiod/config
 mkdir /tmp/radiod/config
 
+# Version
+cp /usr/share/radio/version /tmp/radiod/config/
+
 # Boot config
 cp /boot/config.txt /tmp/radiod/config/
 
@@ -27,8 +30,13 @@ cp /var/lib/radiod/* /tmp/radiod/config/radiod/
 mkdir /tmp/radiod/config/playlists/
 cp /var/lib/mpd/playlists/* /tmp/radiod/config/playlists/
 
+# Pianobar setup
+mkdir /tmp/radiod/config/pianobar/
+cp /home/pi/.config/pianobar/* /tmp/radiod/config/pianobar/
+
 # Make ready for download file
-tar -zcf /home/pi/radio/html/piradio.set /tmp/radiod/config/*
+cd /tmp/radiod/config
+tar -zcf /home/pi/radio/html/piradio.set *
 
 # clear temp
 rm -r /tmp/radiod/config
