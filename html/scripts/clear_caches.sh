@@ -15,3 +15,4 @@ rm /var/log/apt/*.gz
 rm /var/log/icecast2/*.gz
 rm /var/log/mpd/*.gz
 rm /var/log/samba/*.*
+sync
