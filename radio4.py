@@ -137,7 +137,7 @@ class MyDaemon(Daemon):
 		lcd.line2(message)
 
 		lcd.line3("Waiting for network")
-		IPwait = 5	# Wait max 5s. for network
+		IPwait = 10	# Wait max 10s. for network
 		while IPwait > 0:
 			IPwait = IPwait - 1
 			ipaddr = exec_cmd('hostname -I')
