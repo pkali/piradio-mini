@@ -89,9 +89,13 @@ config = Configuration()
 # Remember! If you don't want to kill your SD card, add line in /etc/fstab : (Pecus)
 # 'tmpfs     /tmp      /tmpfs    size=10M,noatime   0  0'  (Pecus)
 Line1File = "/tmp/radiod/line1.txt"  # (Pecus)
+Line1sFile = "/tmp/radiod/line1s.txt"  # (Pecus)
 Line2File = "/tmp/radiod/line2.txt"  # (Pecus)
+Line2sFile = "/tmp/radiod/line2s.txt"  # (Pecus)
 Line3File = "/tmp/radiod/line3.txt"  # (Pecus)
+Line3sFile = "/tmp/radiod/line3s.txt"  # (Pecus)
 Line4File = "/tmp/radiod/line4.txt"  # (Pecus)
+Line4sFile = "/tmp/radiod/line4s.txt"  # (Pecus)
 
 
 # Lcd Class 
@@ -236,6 +240,7 @@ class Lcd:
 	# Display Line 1 on LCD
 	def line1(self,text):
 		self.writeToFile (Line1File,text) # (Pecus)
+		self.writeToFile (Line1sFile,text[0:self.width]) # (Pecus)
 		self._byte_out(LCD_LINE_1, LCD_CMD)
 		self._string(text)
 		return
@@ -243,6 +248,7 @@ class Lcd:
 	# Display Line 2 on LCD
 	def line2(self,text):
 		self.writeToFile (Line2File,text) # (Pecus)
+		self.writeToFile (Line2sFile,text[0:self.width]) # (Pecus)
 		self._byte_out(LCD_LINE_2, LCD_CMD)
 		self._string(text)
 		return
@@ -250,6 +256,7 @@ class Lcd:
 	# Display Line 3 on LCD
 	def line3(self,text):
 		self.writeToFile (Line3File,text) # (Pecus)
+		self.writeToFile (Line3sFile,text[0:self.width]) # (Pecus)
 		self._byte_out(LCD_LINE_3, LCD_CMD)
 		self._string(text)
 		return
@@ -257,6 +264,7 @@ class Lcd:
 	# Display Line 4 on LCD
 	def line4(self,text):
 		self.writeToFile (Line4File,text) # (Pecus)
+		self.writeToFile (Line4sFile,text[0:self.width]) # (Pecus)
 		self._byte_out(LCD_LINE_4, LCD_CMD)
 		self._string(text)
 		return
@@ -264,35 +272,36 @@ class Lcd:
 	# Scroll message on line 1
 	def scroll1(self,mytext,interrupt):
 		self.writeToFile (Line1File,mytext) # (Pecus)
-		self._scroll(mytext,LCD_LINE_1,interrupt)
+		self._scroll(mytext,LCD_LINE_1,Line1sFile,interrupt)
 		return
 
 	# Scroll message on line 2
 	def scroll2(self,mytext,interrupt):
 		self.writeToFile (Line2File,mytext) # (Pecus)
-		self._scroll(mytext,LCD_LINE_2,interrupt)
+		self._scroll(mytext,LCD_LINE_2,Line2sFile,interrupt)
 		return
 
 	# Scroll message on line 3
 	def scroll3(self,mytext,interrupt):
 		self.writeToFile (Line3File,mytext) # (Pecus)
-		self._scroll(mytext,LCD_LINE_3,interrupt)
+		self._scroll(mytext,LCD_LINE_3,Line3sFile,interrupt)
 		return
 
 	# Scroll message on line 4
 	def scroll4(self,mytext,interrupt):
 		self.writeToFile (Line4File,mytext) # (Pecus)
-		self._scroll(mytext,LCD_LINE_4,interrupt)
+		self._scroll(mytext,LCD_LINE_4,Line4sFile,interrupt)
 		return
 
 	# Scroll line - interrupt() breaks out routine if True
-	def _scroll(self,mytext,line,interrupt):
+	def _scroll(self,mytext,line,file,interrupt):
 		ilen = len(mytext)
 		skip = False
 
 		self._byte_out(line, LCD_CMD)
 		self._string(mytext[0:self.width + 1])
-	
+		self.writeToFile (file,mytext[0:self.width]) # (Pecus)
+		
 		if (ilen <= self.width):
 			skip = True
 
@@ -307,6 +316,7 @@ class Lcd:
 			for i in range(0, ilen - self.width + 1 ):
 				self._byte_out(line, LCD_CMD)
 				self._string(mytext[i:i+self.width])
+				self.writeToFile (file,mytext[i:i+self.width]) # (Pecus)
 				if interrupt():
 					skip = True
 					break

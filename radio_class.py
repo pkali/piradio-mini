@@ -2289,7 +2289,7 @@ class Radio:
 
 		self.randomOff()
 		self.consumeOff()
-		self.repeatOff()
+		self.repeatOn()
 		self.playlist = self.createPlayList()
 		self.current_file = CurrentStationFile
 		self.current_id = self.getStoredID(self.current_file)
