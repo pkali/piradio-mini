@@ -8,10 +8,10 @@
 	<script src="jquery-1.12.4.min.js"></script>
 	<script>
 	$(document).ready(function() {
-		$("#wyswietlacz").load("lcd.php");
+		$("#wyswietlacz").load("lcd.php?scroll=False");
 		var refreshId = setInterval(function() {
-			$("#wyswietlacz").load("lcd.php");
-		}, 1000);
+			$("#wyswietlacz").load("lcd.php?scroll=False");
+		}, 200);
 		$.ajaxSetup({ cache: false });
 		$("#player").load("player.php");
 	});
