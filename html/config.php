@@ -7,7 +7,11 @@
 	<title>PiRadio mini web interface - config page</title>
 </head>
 <body>
-<b>PiRadio</b><div id="config"><a href="index.html">radio</a></div></br>
+<?php
+$piradio_version = str_replace("\n","",file_get_contents( "/usr/share/radio/version" ));
+echo "<b>PiRadio v. ".$piradio_version."</b>";
+?>
+<div id="config"><a href="index.php">radio</a></div></br>
 <hr>
 Global PiRadio config<br>
 <form action="changeconf.php?file=radio" method="post">

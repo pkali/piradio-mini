@@ -7,7 +7,11 @@
 	<title>PiRadio mini web interface - station list backup and restore</title>
 </head>
 <body>
-<b>PiRadio</b><div id="config"><a href="config.php">config</a></div></br>
+<?php
+$piradio_version = str_replace("\n","",file_get_contents( "/usr/share/radio/version" ));
+echo "<b>PiRadio v. ".$piradio_version."</b>";
+?>
+<div id="config"><a href="config.php">config</a></div></br>
 <hr>
 <?php
 $selected = $_FILES['file'];
@@ -36,7 +40,7 @@ if (isset($selected)) {
 				echo "<script>\r\n";
 				echo "// redirect to main after 5 seconds\r\n";
 				echo "window.setTimeout(function() {\r\n";
-				echo "  window.location.href = 'index.html';\r\n";
+				echo "  window.location.href = 'index.php';\r\n";
 				echo "}, 5000);\r\n";
 				echo "</script>\r\n";
 			} else {
@@ -44,7 +48,7 @@ if (isset($selected)) {
 				echo "<script>\r\n";
 				echo "// redirect to main after 2 seconds\r\n";
 				echo "window.setTimeout(function() {\r\n";
-				echo "  window.location.href = 'index.html';\r\n";
+				echo "  window.location.href = 'index.php';\r\n";
 				echo "}, 2000);\r\n";
 				echo "</script>\r\n";
 			}
@@ -54,7 +58,7 @@ if (isset($selected)) {
 			echo "<script>\r\n";
 			echo "// redirect to main after 2 seconds\r\n";
 			echo "window.setTimeout(function() {\r\n";
-			echo "  window.location.href = 'index.html';\r\n";
+			echo "  window.location.href = 'index.php';\r\n";
 			echo "}, 2000);\r\n";
 			echo "</script>\r\n";
 		}

@@ -7,7 +7,11 @@
 	<title>PiRadio mini web interface - config page</title>
 </head>
 <body>
-<b>PiRadio</b><div id="config"><a href="index.html">radio</a></div></br>
+<?php
+$piradio_version = str_replace("\n","",file_get_contents( "/usr/share/radio/version" ));
+echo "<b>PiRadio v. ".$piradio_version."</b>";
+?>
+<div id="config"><a href="index.php">radio</a></div></br>
 <hr>
 <?php
 $msg = $_GET['file'];
@@ -18,7 +22,7 @@ if (isset($msg)) {
 		echo "<script>\r\n";
 		echo "// redirect to main after 1 second\r\n";
 		echo "window.setTimeout(function() {\r\n";
-		echo "  window.location.href = 'index.html';\r\n";
+		echo "  window.location.href = 'index.php';\r\n";
 		echo "}, 1000);\r\n";
 		echo "</script>\r\n";
 	} elseif ($msg == "reboot") {
@@ -30,7 +34,7 @@ if (isset($msg)) {
 		echo "<script>\r\n";
 		echo "// redirect to main after 30 seconds\r\n";
 		echo "window.setTimeout(function() {\r\n";
-		echo "  window.location.href = 'index.html';\r\n";
+		echo "  window.location.href = 'index.php';\r\n";
 		echo "}, 30000);\r\n";
 		echo "</script>\r\n";
 	} elseif ($msg == "clear_caches") {
@@ -40,7 +44,7 @@ if (isset($msg)) {
 		echo "<script>\r\n";
 		echo "// redirect to main after 1 second\r\n";
 		echo "window.setTimeout(function() {\r\n";
-		echo "  window.location.href = 'index.html';\r\n";
+		echo "  window.location.href = 'index.php';\r\n";
 		echo "}, 1000);\r\n";
 		echo "</script>\r\n";
 	} elseif ($msg == "audio") {
@@ -54,7 +58,7 @@ if (isset($msg)) {
 				echo "<script>\r\n";
 				echo "// redirect to main after 2 seconds\r\n";
 				echo "window.setTimeout(function() {\r\n";
-				echo "  window.location.href = 'index.html';\r\n";
+				echo "  window.location.href = 'index.php';\r\n";
 				echo "}, 2000);\r\n";
 				echo "</script>\r\n";
 			} else {
@@ -120,7 +124,7 @@ if (isset($msg)) {
 				echo "<script>\r\n";
 				echo "// redirect to main after 30 seconds\r\n";
 				echo "window.setTimeout(function() {\r\n";
-				echo "  window.location.href = 'index.html';\r\n";
+				echo "  window.location.href = 'index.php';\r\n";
 				echo "}, 30000);\r\n";
 				echo "</script>\r\n";
 			}
@@ -129,7 +133,7 @@ if (isset($msg)) {
 			echo "<script>\r\n";
 			echo "// redirect to main after 2 seconds\r\n";
 			echo "window.setTimeout(function() {\r\n";
-			echo "  window.location.href = 'index.html';\r\n";
+			echo "  window.location.href = 'index.php';\r\n";
 			echo "}, 2000);\r\n";
 			echo "</script>\r\n";
 		}
@@ -146,7 +150,7 @@ if (isset($msg)) {
 			echo "<script>\r\n";
 			echo "// redirect to main after 30 seconds\r\n";
 			echo "window.setTimeout(function() {\r\n";
-			echo "  window.location.href = 'index.html';\r\n";
+			echo "  window.location.href = 'index.php';\r\n";
 			echo "}, 30000);\r\n";
 			echo "</script>\r\n";
 		} else {
@@ -154,7 +158,7 @@ if (isset($msg)) {
 			echo "<script>\r\n";
 			echo "// redirect to main after 2 seconds\r\n";
 			echo "window.setTimeout(function() {\r\n";
-			echo "  window.location.href = 'index.html';\r\n";
+			echo "  window.location.href = 'index.php';\r\n";
 			echo "}, 2000);\r\n";
 			echo "</script>\r\n";
 		}
@@ -198,7 +202,7 @@ if (isset($msg)) {
 				echo "<script>\r\n";
 				echo "// redirect to main after 2 seconds\r\n";
 				echo "window.setTimeout(function() {\r\n";
-				echo "  window.location.href = 'index.html';\r\n";
+				echo "  window.location.href = 'index.php';\r\n";
 				echo "}, 2000);\r\n";
 				echo "</script>\r\n";
 			}
@@ -208,7 +212,7 @@ if (isset($msg)) {
 			echo "<script>\r\n";
 			echo "// redirect to main after 2 seconds\r\n";
 			echo "window.setTimeout(function() {\r\n";
-			echo "  window.location.href = 'index.html';\r\n";
+			echo "  window.location.href = 'index.php';\r\n";
 			echo "}, 2000);\r\n";
 			echo "</script>\r\n";
 			$end = shell_exec('sudo ./scripts/new_stationlist.sh');
@@ -217,7 +221,7 @@ if (isset($msg)) {
 			echo "<script>\r\n";
 			echo "// redirect to main after 2 seconds\r\n";
 			echo "window.setTimeout(function() {\r\n";
-			echo "  window.location.href = 'index.html';\r\n";
+			echo "  window.location.href = 'index.php';\r\n";
 			echo "}, 2000);\r\n";
 			echo "</script>\r\n";
 		}
@@ -255,7 +259,7 @@ if (isset($msg)) {
 			echo "<script>\r\n";
 			echo "// redirect to main after 2 seconds\r\n";
 			echo "window.setTimeout(function() {\r\n";
-			echo "  window.location.href = 'index.html';\r\n";
+			echo "  window.location.href = 'index.php';\r\n";
 			echo "}, 2000);\r\n";
 			echo "</script>\r\n";
 			$share_string = $_POST["share_string"];
@@ -266,7 +270,7 @@ if (isset($msg)) {
 			echo "<script>\r\n";
 			echo "// redirect to main after 2 seconds\r\n";
 			echo "window.setTimeout(function() {\r\n";
-			echo "  window.location.href = 'index.html';\r\n";
+			echo "  window.location.href = 'index.php';\r\n";
 			echo "}, 2000);\r\n";
 			echo "</script>\r\n";
 		}
@@ -280,7 +284,7 @@ if (isset($msg)) {
 			echo "<script>\r\n";
 			echo "// redirect to main after 30 seconds\r\n";
 			echo "window.setTimeout(function() {\r\n";
-			echo "  window.location.href = 'index.html';\r\n";
+			echo "  window.location.href = 'index.php';\r\n";
 			echo "}, 30000);\r\n";
 			echo "</script>\r\n";
 		} else {
@@ -289,7 +293,7 @@ if (isset($msg)) {
 			echo "<script>\r\n";
 			echo "// redirect to main after 2 seconds\r\n";
 			echo "window.setTimeout(function() {\r\n";
-			echo "  window.location.href = 'index.html';\r\n";
+			echo "  window.location.href = 'index.php';\r\n";
 			echo "}, 2000);\r\n";
 			echo "</script>\r\n";
 		}
@@ -382,7 +386,7 @@ if (isset($msg)) {
 			echo "<script>\r\n";
 			echo "// redirect to main after 120 seconds\r\n";
 			echo "window.setTimeout(function() {\r\n";
-			echo "  window.location.href = 'index.html';\r\n";
+			echo "  window.location.href = 'index.php';\r\n";
 			echo "}, 120000);\r\n";
 			echo "</script>\r\n";
 		} elseif ($option == "no") {
@@ -390,7 +394,7 @@ if (isset($msg)) {
 			echo "<script>\r\n";
 			echo "// redirect to main after 2 seconds\r\n";
 			echo "window.setTimeout(function() {\r\n";
-			echo "  window.location.href = 'index.html';\r\n";
+			echo "  window.location.href = 'index.php';\r\n";
 			echo "}, 2000);\r\n";
 			echo "</script>\r\n";
 		}

@@ -7,7 +7,11 @@
 	<title>PiRadio mini web interface - update confirm</title>
 </head>
 <body>
-<b>PiRadio</b><div id="config"><a href="config.php">config</a></div></br>
+<?php
+$piradio_version = str_replace("\n","",file_get_contents( "/usr/share/radio/version" ));
+echo "<b>PiRadio v. ".$piradio_version."</b>";
+?>
+<div id="config"><a href="config.php">config</a></div></br>
 <hr>
 Update to last build from github<br><pre>
 <?php
