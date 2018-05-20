@@ -180,8 +180,8 @@ echo $stations;
 echo '</textarea>';
 ?>
 <br><button type="submit" name="submit" value="new">Save radio stations list</button>
-<button type="submit" name="submit" value="old">Restore previous list</button>
-</form>
+<button type="submit" name="submit" value="old">Restore previous list</button></form>
+<a href="s_stlist.php"><button>Backup & Restore station list</button></a>
 <hr>
 <a href="changeconf.php?file=restart"><button>PiRadio restart</button></a>
 <a href="changeconf.php?file=reboot"><button>System reboot</button></a>
