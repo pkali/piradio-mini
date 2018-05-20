@@ -10,6 +10,7 @@ cp /usr/share/radio/version /tmp/radiod/config/
 # PiRadio stationlist file
 mkdir /tmp/radiod/config/radiod/
 cp /var/lib/radiod/stationlist /tmp/radiod/config/radiod/
+cp /var/lib/radiod/current_station /tmp/radiod/config/radiod/
 
 # MPD playlists
 mkdir /tmp/radiod/config/playlists/

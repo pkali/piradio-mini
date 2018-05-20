@@ -20,6 +20,7 @@ if [ $# = 1 ]; then
 	elif [ ${OPTION} = "apply" ]; then
 		# PiRadio statiolist file
 		cp /tmp/radiod/config/radiod/stationlist /var/lib/radiod/
+		cp /tmp/radiod/config/radiod/current_station /var/lib/radiod/
 		# MPD playlists
 		rm /var/lib/mpd/playlists/*
 		cp /tmp/radiod/config/playlists/* /var/lib/mpd/playlists/
