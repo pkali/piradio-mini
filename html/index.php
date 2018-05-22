@@ -128,21 +128,12 @@ echo "<b>PiRadio v. ".$piradio_version."</b>";
  });
  $("#RADIObutton").click(function() {
    $.post("button.php?key=KEY_RADIO");
-   setTimeout(function(){
-     $("#player").load("player.php");
-   }, 4000);
  });
  $("#MEDIAbutton").click(function() {
    $.post("button.php?key=KEY_MEDIA");
-   setTimeout(function(){
-     $("#player").load("player.php");
-   }, 5500);
  });
  $("#PANDORAbutton").click(function() {
    $.post("button.php?key=KEY_PANDORA");
-   setTimeout(function(){
-     $("#player").load("player.php");
-   }, 5500);
  });
  $("#STREAMTbutton").click(function() {
    $.post("button.php?key=STREAMING_TOGGLE");
