@@ -59,17 +59,17 @@ model_data = {
     'a01041': ('2B', '1.1', 1024, 'Embest', ''),
     'a21041': ('2B', '1.1', 1024, 'Embest', ''),
     'a22042': ('2B', '1.2', 1024, 'Embest', 'with BCM2837'),
-    'a02082': ('3B', '2.0', 1024, 'Sony', 'Quad Core 1.2MHz, Onboard WiFi and Bluetooth 4.1'),
-    'a22082': ('3B', '2.0', 1024, 'Embest', 'Quad Core 1.2MHz, Onboard WiFi and Bluetooth 4.1'),
     'a02082': ('3B', '1.2', 1024, 'Sony', 'Quad Core 1.2MHz, Onboard WiFi and Bluetooth 4.1'),
     'a020a0': ('Compute Module 3', '1.0', 1024, 'Sony', 'and CM3 Lite'),
     'a22082': ('3B', '1.2', 1024, 'Embest', 'Quad Core 1.2MHz, Onboard WiFi and Bluetooth 4.1'),
     'a32082': ('3B', '1.2', 1024, 'Sony (Japan)', 'Quad Core 1.2MHz, Onboard WiFi and Bluetooth 4.1'),
-    '900091': ('A+', '1.1', 512, 'Sony', ''),
+    '900021': ('A+', '1.1', 512, 'Sony', ''),
+    '900032': ('B+', '1.2', 512, 'Sony', ''),
     '900092': ('Pi Zero', '1.2', 512, 'Sony', ''),
     '900093': ('Pi Zero', '1.3', 512, 'Sony', ''),
     '920093': ('Pi Zero', '1.3', 512, 'Embest', ''),
     '9000c1': ('Pi Zero W', '1.1', 512, 'Sony', 'Onboard WiFi and Bluetooth 4.1'),
+    'a020d3': ('3B+', '1.3', 1024, 'Sony', 'Quad Core 1.4MHz, Onboard Dual-band WiFi and Bluetooth 4.2'),
 }
 
 
