@@ -70,6 +70,9 @@ model_data = {
     '920093': ('Pi Zero', '1.3', 512, 'Embest', ''),
     '9000c1': ('Pi Zero W', '1.1', 512, 'Sony', 'Onboard WiFi and Bluetooth 4.1'),
     'a020d3': ('3B+', '1.3', 1024, 'Sony', 'Quad Core 1.4MHz, Onboard Dual-band WiFi and Bluetooth 4.2'),
+    'a03111': ('4B', '1.1', 1024, 'Sony', 'Quad Core 1.5MHz, Onboard Dual-band WiFi and Bluetooth 5'),
+    'b03111': ('4B', '1.1', 2048, 'Sony', 'Quad Core 1.5MHz, Onboard Dual-band WiFi and Bluetooth 5'),
+    'c03111': ('4B', '1.1', 4096, 'Sony', 'Quad Core 1.5MHz, Onboard Dual-band WiFi and Bluetooth 5'),
 }
 
 
