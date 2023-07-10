@@ -170,7 +170,7 @@ class Lcd:
 		self.setBright(False)
 		return
 	 
-	# Output byte to Led  mode = Command or Data
+	# Output byte to LCD  mode = Command or Data
 	def _byte_out(self,bits, mode):
 		global lcd_enable, lcd_select 
 		global lcd_data4, lcd_data5, lcd_data6, lcd_data7
